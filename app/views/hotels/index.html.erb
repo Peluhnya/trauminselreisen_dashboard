@@ -1,0 +1,46 @@
+
+    <% @hotels.each do |hotel| %>
+
+      <table class="responsive-table collapsible">
+
+        <tr id="cat1" class="header main" >
+          <th><%= hotel.name %></th>
+          <% months_after_current.each do |month| %>
+            <th><%= month.upcase %></th>
+          <% end %>
+          <% months_before_current.each do |month| %>
+            <th><%= month.upcase %></th>
+          <% end %>
+        </tr>
+
+
+
+          <% hotel.hotel_sites.each do |hs| %>
+          <% mps = hs.month_prices %>
+            <tr  id="cat1a" class="header cat1">
+              <td><%= hs.site.name %></td>
+              <% months_after_current.each do |month| %>
+                <td>&#x20ac;<%= mps.where(month: month).sum(:price_concurrent) %></td>
+              <% end %>
+              <% months_before_current.each do |month| %>
+                <td>&#x20ac;<%= mps.where(month: month).sum(:price_concurrent) %></td>
+              <% end %>
+            </tr>
+          <% hs.hotel_types.each do |ht| %>
+            <% mps = ht.month_prices %>
+            <tr class="cat1a">
+              <td><%= ht.name %></td>
+              <% months_after_current.each do |month| %>
+                <td>&#x20ac;<%= mps.where(month: month).sum(:price_concurrent) %></td>
+              <% end %>
+              <% months_before_current.each do |month| %>
+                <td>&#x20ac;<%= mps.where(month: month).sum(:price_concurrent) %></td>
+              <% end %>
+            </tr>
+          <% end %>
+          <% end %>
+
+
+      </table>
+
+    <% end %>

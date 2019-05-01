@@ -1,0 +1,61 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  hotel_site: one
+  year: 
+  jan: 
+  jan_origin: 
+  feb: 
+  feb_origin: 
+  mar: 
+  mar_origin: 
+  apr: 
+  apr_origin: 
+  may: 
+  may_origin: 
+  june: 
+  june_origin: 
+  july: 
+  july_origin: 
+  aug: 
+  aug_origin: 
+  sept: 
+  sep_origin: 
+  oct: 
+  oct_origin: 
+  nov: 
+  nov_origin: 
+  dec: 
+  dec_origin: 
+  link_number: MyString
+
+two:
+  name: MyString
+  hotel_site: two
+  year: 
+  jan: 
+  jan_origin: 
+  feb: 
+  feb_origin: 
+  mar: 
+  mar_origin: 
+  apr: 
+  apr_origin: 
+  may: 
+  may_origin: 
+  june: 
+  june_origin: 
+  july: 
+  july_origin: 
+  aug: 
+  aug_origin: 
+  sept: 
+  sep_origin: 
+  oct: 
+  oct_origin: 
+  nov: 
+  nov_origin: 
+  dec: 
+  dec_origin: 
+  link_number: MyString

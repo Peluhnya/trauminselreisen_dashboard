@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Hotel Types</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Hotel site</th>
+      <th>Year</th>
+
+      <th>Link</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @hotel_types.each do |hotel_type| %>
+      <tr>
+        <td><%= hotel_type.name %></td>
+        <td><%= hotel_type.hotel_site_id %></td>
+        <td><%= hotel_type.year %></td>
+
+        <td><%= hotel_type.link %></td>
+        <td><%= link_to 'Show', hotel_type %></td>
+        <td><%= link_to 'Edit', edit_hotel_type_path(hotel_type) %></td>
+        <td><%= link_to 'Destroy', hotel_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Hotel Type', new_hotel_type_path %>
