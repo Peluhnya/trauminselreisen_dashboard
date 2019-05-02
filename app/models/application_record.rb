@@ -36,6 +36,15 @@ class ApplicationRecord < ActiveRecord::Base
     tui_site(sort_link, hot)
   end
 
+  def tui
+    s = Site.find_by_name("TUI")
+    sort_link = "https://www.tui.com/pauschalreisen/suchen/angebote/Vakkaru-Maldives/653304"
+    hot = "Vakkaru"
+    h = Hotel.find_by_name(hot)
+    hs = h.hotel_sites.find_by(site_id: s.id)
+    hs.update(link: sort_link)
+  end
+
   def tui_site(sort_link, hot)
     browser = Watir::Browser.new
     for i in Date.current.month..12
