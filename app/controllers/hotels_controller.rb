@@ -1,16 +1,18 @@
+# frozen_string_literal: true
+
 class HotelsController < ApplicationController
-  before_action :set_hotel, only: [:show, :edit, :update, :destroy]
+  before_action :set_hotel, only: %i[show edit update destroy]
 
   # GET /hotels
   # GET /hotels.json
   def index
-    @hotels = Hotel.all
+    @q = Hotel.where(active: true).ransack(params[:q])
+    @hotels = @q.result(distinct: true)
   end
 
   # GET /hotels/1
   # GET /hotels/1.json
-  def show
-  end
+  def show; end
 
   # GET /hotels/new
   def new
@@ -18,8 +20,7 @@ class HotelsController < ApplicationController
   end
 
   # GET /hotels/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /hotels
   # POST /hotels.json
@@ -62,13 +63,14 @@ class HotelsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_hotel
-      @hotel = Hotel.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def hotel_params
-      params.require(:hotel).permit(:name, :active)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_hotel
+    @hotel = Hotel.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def hotel_params
+    params.require(:hotel).permit(:name, :active)
+  end
 end
