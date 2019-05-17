@@ -218,8 +218,8 @@ main{
 }
 .second-link-in{
 	display: block;
-	width: 24px;
-	height: 24px;
+	width: 11px;
+    height: 11px;
 	background-image: url(img/icon-link-in.svg);
 	background-repeat: no-repeat;
 	background-size: cover;
