@@ -1,25 +1,67 @@
-<p id="notice"><%= notice %></p>
+<div class="table-responsive">
+  <table class="table top-table">
+    <thead class="first-level">
+      <tr>
+        <th class="row-head">
+          <div class="cel-inner">
+            <div class="top-title"><span class="collapse-arrow collapse-arrow-down"></span><%= @hotel_type.name %></div>
+          </div>
+        </th>
+        <% months_after_current.each do |month| %>
+        <th>
+          <div class="cel-inner">
+            <div class="top-title-col"><%= month.upcase %></div>
+            <div class="sort-wrap">
+              <span class="sort-down inactive"></span>
+              <span class="sort-up"></span>
+            </div>
+          </div>
+        </th>
+        <% end %> 
+        <% months_before_current.each do |month| %>
+        <th>
+          <div class="cel-inner">
+            <div class="top-title-col"><%= month.upcase %></div>
+            <div class="sort-wrap">
+              <span class="sort-down inactive"></span>
+              <span class="sort-up"></span>
+            </div>
+          </div>
+        </th>
+        <% end %>
+      </tr>
+    </thead>
 
-<p>
-  <strong>Name:</strong>
-  <%= @hotel_type.name %>
-</p>
-
-<p>
-  <strong>Hotel site:</strong>
-  <%= @hotel_type.hotel_site_id %>
-</p>
-
-<p>
-  <strong>Year:</strong>
-  <%= @hotel_type.year %>
-</p>
-
-
-<p>
-  <strong>Link number:</strong>
-  <%= @hotel_type.link %>
-</p>
-
-<%= link_to 'Edit', edit_hotel_type_path(@hotel_type) %> |
-<%= link_to 'Back', hotel_types_path %>
+    <tbody class="second-level">
+      <tr>
+        <% hs = @hotel_type.hotel_site %>
+        <td class="row-head">
+            <div class="cel-inner">
+              <div class="inner-title"><span class="second-level-title__img"><%= image_tag url_for(hs.logo) if hs.logo.attached? %></span>
+                <span class="collapse-arrow collapse-arrow-down-black"></span><%= hs.site.name %></div>
+              </div>
+            </div>
+          </td>
+      <% months_after_current.each do |month| %>
+        <td>
+          <div class="cel-inner">
+            <span class="top-price price-unchanged">€<%=  @hotel_type.month_prices.where(month: month).sum(:price_concurrent) %></span>
+            <span class="bottom-price"></span>
+          </div>
+        </td>
+        <% end %>
+        <% months_before_current.each do |month| %>
+        <td>
+            <div class="cel-inner">
+              <span class="top-price price-unchanged">
+                €<%= @hotel_type.month_prices.where(month: month).sum(:price_concurrent) %>
+              </span>
+              <span class="bottom-price"></span>
+            </div>
+          </td>
+          <% end %>
+      </tr>
+    </tbody>
+    
+  </table>
+</div>

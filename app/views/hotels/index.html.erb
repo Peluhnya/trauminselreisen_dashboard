@@ -37,26 +37,17 @@
       <% hotel.hotel_sites.each do |hs| %>
       <% mps = hs.month_prices %>
       <tr class="second-level-head">
-        <td class="row-head">
+        <td class="row-head" colspan="13">
           <div class="cel-inner">
             <div class="second-level-title">
               <div class="second-level-title__inner">
                   <span class="second-level-title__img"><%= image_tag url_for(hs.logo) if hs.logo.attached? %></span>
-                  <span class="collapse-arrow collapse-arrow-down-black"></span><%= hs.site.name %></div><a href="#"
-                target="_blank"><span class="second-link-out"></span></a>
+                  <span class="collapse-arrow collapse-arrow-down-black"></span><%= hs.site.name %></div>
+                  <a href="<%= hs.link %>" target="_blank"><span class="second-link-out"></span></a>
             </div>
           </div>
         </td>
-        <% months_after_current.each do |month| %>
-        <td>
-          <div class="cel-inner">€<%= mps.where(month: month).pluck(:price_concurrent).min %></div>
-        </td>
-        <% end %>
-        <% months_before_current.each do |month| %>
-        <td>
-          <div class="cel-inner">€<%= mps.where(month: month).pluck(:price_concurrent).min %></div>
-        </td>
-        <% end %>
+     
       </tr>
       <tr class="second-level-content">
         <td colspan="13">
@@ -67,11 +58,11 @@
               <tr>
                   <td class="row-head">
                       <div class="cel-inner">
-                        <div class="inner-title"><%= ht.name %> <a href="#" target="_blank"><span class="second-link-in"></span></a></div>
+                        <div class="inner-title"><%= ht.name %> <a href="<%= hotel_type_url(ht) %>" target="_blank"><span class="second-link-in"></span></a></div>
                       </div>
                     </td>
                 <% months_after_current.each do |month| %>
-                <td>
+                  <td>
                     <div class="cel-inner">
                       <span class="top-price price-unchanged">€<%= mps.where(month: month).sum(:price_concurrent) %></span>
                       <span class="bottom-price"></span>
@@ -81,7 +72,9 @@
                 <% months_before_current.each do |month| %>
                 <td>
                     <div class="cel-inner">
-                      <span class="top-price price-unchanged">€<%= mps.where(month: month).sum(:price_concurrent) %></span>
+                      <span class="top-price price-unchanged">
+                        €<%= mps.where(month: month).sum(:price_concurrent) %>
+                      </span>
                       <span class="bottom-price"></span>
                     </div>
                   </td>
