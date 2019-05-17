@@ -37,7 +37,7 @@
         <% hs = @hotel_type.hotel_site %>
         <td class="row-head">
             <div class="cel-inner">
-              <div class="inner-title"><span class="second-level-title__img"><%= image_tag url_for(hs.logo) if hs.logo.attached? %></span>
+              <div class="inner-title"><span class="second-level-title__img"><%= image_tag url_for(hs.site.logo) if hs.site.logo.attached? %></span>
                 <span class="collapse-arrow collapse-arrow-down-black"></span><%= hs.site.name %></div>
               </div>
             </div>
