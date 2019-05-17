@@ -41,7 +41,7 @@
           <div class="cel-inner">
             <div class="second-level-title">
               <div class="second-level-title__inner">
-                  <span class="second-level-title__img"><%= image_tag url_for(hs.logo) if hs.logo.attached? %></span>
+                  <span class="second-level-title__img"><%= image_tag url_for(hs.site.logo) if hs.site.logo.attached? %></span>
                   <span class="collapse-arrow collapse-arrow-down-black"></span><%= hs.site.name %></div>
                   <a href="<%= hs.link %>" target="_blank"><span class="second-link-out"></span></a>
             </div>
