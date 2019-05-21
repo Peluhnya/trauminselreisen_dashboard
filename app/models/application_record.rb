@@ -6,7 +6,59 @@ class ApplicationRecord < ActiveRecord::Base
   require 'open-uri'
 
   def main_site
-    doc = Nokogiri::HTML(open('https://www.trauminselreisen.de/malediven/hotel/soneva-fushi/#price', ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE))
+    Hotel.where(active:true).where.not(origin_url: [nil, '']).each do |hot|
+      doc = Nokogiri::HTML(open(hot.origin_url, ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE))
+      table = doc.css(".simpletoggle.price-period.room-price-period")
+      table.each do |item|
+        header = item.css('.simpletoggle-header.price-period-header').text
+        months = header.split('bis')
+        onemonth = nil
+        twomonth = nil
+        I18n.t("date.month_names").compact.each do |m|
+          onemonth = m if (months.first.include? m)
+          twomonth = m if (months.last.include? m)
+        end
+        ms = I18n.t("date.month_names").compact
+        ms.each do |m|
+          if m == onemonth
+            break
+          else
+            ms.shift
+          end
+        end
+        ms.reverse.each do |m|
+          if m == twomonth
+            break
+          else
+            ms.pop
+          end
+        end
+        hotels = item.css('.room-toggle')
+        hotels.each do |hotel|
+        name = hotel.css(".room-name").text.split(' (').first
+        origin = Origin.find_by_name(name)
+        unless origin.present?
+          origin = Origin.create(name: name, hotel_id: hot.id)
+        end
+        price_line = hotel.css(".price-row").first
+        price = price_line.css(".price").text.gsub(" €",'').gsub(".", "")
+          ms.each do |month|
+            mp = MonthPrice.find_by(origin_id: origin.id, month: month, year: 2019)
+            if mp.present?
+              unless (price == mp.price) && price != 0
+                mp.update(price: price)
+              end
+            else
+              mp = MonthPrice.create(origin_id: origin.id, price: price.to_i, month: month, year: 2019)
+            
+              puts origin.id
+              puts mp.id
+              puts price
+            end
+          end
+        end
+      end
+    end
   end
 
   def ewtc_site
@@ -30,36 +82,58 @@ class ApplicationRecord < ActiveRecord::Base
   end
 
   def tui_site(sort_link, hot)
-    browser = Watir::Browser.new
+    browser =  Watir::Browser.new :chrome, proxy: proxy, headless: true
     (Date.current.month..12).each do |i|
       i = i.to_s.length == 1 ? '0' + i.to_s : i.to_s
       link = sort_link + "?departureAirports=FRA&showTotalPrice=true&startDate=#{Date.current.year}-#{i}-01&endDate=#{Date.current.year}-#{i}-08&duration=7&abtestSuperLastMinute=true&boardTypes=HB&links=1"
-      browser.goto link
+      browser.goto link 
       sleep 30
       doc = Nokogiri::HTML.parse(browser.html)
       doc.css('article.pt__box').each do |box|
-        title = box.css('span.u-l-vi').text
+        title = box.css('span.u-l-vi').text.split(' (').first
         price = box.css('p.pt__cta-price span.amount').text
         h = Hotel.find_by_name(hot)
         s = Site.find_by_name('TUI')
         hs = h.hotel_sites.where(site_id: s.id).take
-        ht = HotelType.find_by(name: title, hotel_site_id: hs.id, year: Date.current.year)
+        origin = h.origins.where(name: title).take
+        unless origin.nil?
+        ht = HotelType.find_by(origin_id: origin.id, hotel_site_id: hs.id)
         ht = if ht.present?
                ht
              else
-               HotelType.create(name: title, year: Date.current.year, link: link, hotel_site_id: hs.id)
+               HotelType.create(origin_id: origin.id, link: link, hotel_site_id: hs.id)
              end
-
-        mp = MonthPrice.find_by(hotel_type_id: ht.id, month: months_compact[i.to_i - 1])
+        omp = origin.month_prices.where(month: months_compact[i.to_i - 1], year: Date.current.year).take
+        mp = MonthPrice.find_by(hotel_type_id: ht.id, month: months_compact[i.to_i - 1], year: Date.current.year)
+        if omp.nil? 
+          @option = 'unchanged'
+        else
+          or_price = omp.price * 2 * 7
+          if or_price > price.to_i
+            @option = 'up'
+          elsif or_price < price.to_i
+            @option = 'down'
+          else
+            @option = 'unchanged'
+          end
+        end
         if mp.present?
-          unless (price == mp.price_concurrent) && price != 0
-            mp.update(price_concurrent: price)
+          unless (price == mp.price) && price != 0
+            mp.update(price: price, price_option: @option)
           end
         else
-          mp = MonthPrice.create(hotel_type_id: ht.id, link: sort_link, price_concurrent: price, month: months_compact[i.to_i - 1])
+          mp = MonthPrice.create(hotel_type_id: ht.id, link: sort_link, price: price, month: months_compact[i.to_i - 1], year: Date.current.year, price_option: @option)
         end
+      end
       end
     end
     browser.close
+  end
+
+  def proxy
+    proxy = {
+      http: '35.158.114.186:3128',
+      ssl:  '35.158.114.186:3128'
+    }
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_17_071118) do
+ActiveRecord::Schema.define(version: 2019_05_21_161556) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,13 +47,13 @@ ActiveRecord::Schema.define(version: 2019_05_17_071118) do
   end
 
   create_table "hotel_types", force: :cascade do |t|
-    t.string "name"
     t.bigint "hotel_site_id", null: false
-    t.integer "year"
     t.string "link"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "origin_id", null: false
     t.index ["hotel_site_id"], name: "index_hotel_types_on_hotel_site_id"
+    t.index ["origin_id"], name: "index_hotel_types_on_origin_id"
   end
 
   create_table "hotels", force: :cascade do |t|
@@ -62,18 +62,29 @@ ActiveRecord::Schema.define(version: 2019_05_17_071118) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "city"
+    t.string "origin_url"
   end
 
   create_table "month_prices", force: :cascade do |t|
     t.string "month"
-    t.integer "price_concurrent"
     t.integer "price"
-    t.string "option"
-    t.bigint "hotel_type_id", null: false
+    t.string "price_option"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "link"
+    t.bigint "origin_id"
+    t.integer "year"
+    t.bigint "hotel_type_id"
     t.index ["hotel_type_id"], name: "index_month_prices_on_hotel_type_id"
+    t.index ["origin_id"], name: "index_month_prices_on_origin_id"
+  end
+
+  create_table "origins", force: :cascade do |t|
+    t.string "name"
+    t.bigint "hotel_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["hotel_id"], name: "index_origins_on_hotel_id"
   end
 
   create_table "sites", force: :cascade do |t|
@@ -87,5 +98,8 @@ ActiveRecord::Schema.define(version: 2019_05_17_071118) do
   add_foreign_key "hotel_sites", "hotels"
   add_foreign_key "hotel_sites", "sites"
   add_foreign_key "hotel_types", "hotel_sites"
+  add_foreign_key "hotel_types", "origins"
   add_foreign_key "month_prices", "hotel_types"
+  add_foreign_key "month_prices", "origins"
+  add_foreign_key "origins", "hotels"
 end

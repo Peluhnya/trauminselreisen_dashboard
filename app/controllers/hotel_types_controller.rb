@@ -71,6 +71,6 @@ class HotelTypesController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def hotel_type_params
-    params.require(:hotel_type).permit(:name, :hotel_site_id, :year, :link)
+    params.require(:hotel_type).permit(:hotel_site_id, :link, :origin_id)
   end
 end

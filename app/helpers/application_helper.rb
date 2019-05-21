@@ -1,7 +1,7 @@
 module ApplicationHelper
 
   def months_compact
-    I18n.t("date.abbr_month_names").compact
+    I18n.t("date.month_names").compact
   end
 
   def months_after_current
@@ -12,4 +12,16 @@ module ApplicationHelper
     months_compact.first(Date.today.month-1)
   end
 
+
+  def abbr_months_compact
+    I18n.t("date.abbr_month_names").compact
+  end
+
+  def abbr_months_after_current
+    abbr_months_compact.last(12-Date.today.month+1)
+  end
+
+  def abbr_months_before_current
+    abbr_months_compact.first(Date.today.month-1)
+  end
 end

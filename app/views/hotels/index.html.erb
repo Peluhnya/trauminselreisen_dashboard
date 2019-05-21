@@ -8,7 +8,7 @@
             <div class="top-title"><span class="collapse-arrow collapse-arrow-down"></span><%= hotel.name %> (<%= hotel.city %>)</div>
           </div>
         </th>
-        <% months_after_current.each do |month| %>
+        <% abbr_months_after_current.each do |month| %>
         <th>
           <div class="cel-inner">
             <div class="top-title-col"><%= month.upcase %></div>
@@ -19,7 +19,7 @@
           </div>
         </th>
         <% end %>
-        <% months_before_current.each do |month| %>
+        <% abbr_months_before_current.each do |month| %>
         <th>
           <div class="cel-inner">
             <div class="top-title-col"><%= month.upcase %></div>
@@ -36,6 +36,7 @@
     <tbody class="second-level">
       <% hotel.hotel_sites.each do |hs| %>
       <% mps = hs.month_prices %>
+      <% if mps.present? %>
       <tr class="second-level-head">
         <td class="row-head" colspan="13">
           <div class="cel-inner">
@@ -55,27 +56,33 @@
             <tbody>
               <% hs.hotel_types.each do |ht| %>
               <% mps = ht.month_prices %>
+              
               <tr>
                   <td class="row-head">
                       <div class="cel-inner">
-                        <div class="inner-title"><%= ht.name %> <a href="<%= hotel_type_url(ht) %>" target="_blank"><span class="second-link-in"></span></a></div>
+                        <div class="inner-title"><%= ht.origin.name %> <a href="<%= hotel_type_url(ht) %>" target="_blank"><span class="second-link-in"></span></a></div>
                       </div>
                     </td>
+                    
                 <% months_after_current.each do |month| %>
+                <%  origin = ht.origin.month_prices.where(month: month, year: Date.current.year).take %>
+                <% mpss = mps.where(month: month, year: Date.current.year) %>
                   <td>
                     <div class="cel-inner">
-                      <span class="top-price price-unchanged">€<%= mps.where(month: month).sum(:price_concurrent) %></span>
-                      <span class="bottom-price"></span>
+                      <span class="top-price price-<%= mpss.take.price_option if mpss.take%>">€<%= mpss.sum(:price) %></span>
+                      <span class="bottom-price">€<%= (origin.price * 2 * 7) if origin %></span>
                     </div>
                   </td>
                 <% end %>
                 <% months_before_current.each do |month| %>
+                <% mpss = mps.where(month: month, year: Date.current.year) %>
+                <%  origin = ht.origin.month_prices.where(month: month, year: Date.current.year).take %>
                 <td>
                     <div class="cel-inner">
-                      <span class="top-price price-unchanged">
-                        €<%= mps.where(month: month).sum(:price_concurrent) %>
+                      <span class="top-price price-<%= mpss.take.price_option if mpss.take %>">
+                        €<%= mpss.sum(:price) %> 
                       </span>
-                      <span class="bottom-price"></span>
+                      <span class="bottom-price">€<%= (origin.price * 2 * 7) if origin %></span>
                     </div>
                   </td>
                   <% end %>
@@ -85,6 +92,7 @@
           </table>
         </td>
       </tr>
+      <% end %>
       <% end %>
     </tbody>
     
