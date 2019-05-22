@@ -91,7 +91,7 @@ class ApplicationRecord < ActiveRecord::Base
       doc = Nokogiri::HTML.parse(browser.html)
       doc.css('article.pt__box').each do |box|
         title = box.css('span.u-l-vi').text.split(' (').first
-        price = box.css('p.pt__cta-price span.amount').text
+        price = box.css('p.pt__cta-price span.amount').text.gsub('.','')
         h = Hotel.find_by_name(hot)
         s = Site.find_by_name('TUI')
         hs = h.hotel_sites.where(site_id: s.id).take

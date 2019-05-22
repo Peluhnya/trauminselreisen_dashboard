@@ -1,4 +1,5 @@
 <% @hotels.each do |hotel| %>
+<% if hotel.hotel_types.present? %>
 <div class="table-responsive">
   <table class="table top-table">
     <thead class="first-level">
@@ -98,4 +99,4 @@
     
   </table>
 </div>
-<% end %>
+<% end %><% end %>
