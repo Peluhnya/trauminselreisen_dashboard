@@ -28,6 +28,11 @@ gem 'material_icons'
 gem 'pg'
 gem "watir-rails"
 gem 'ransack'
+gem "headless", '= 2.2.2'
+gem 'selenium-webdriver'
+gem 'chromedriver-helper'
+gem 'watir'
+gem 'webdriver-user-agent'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false

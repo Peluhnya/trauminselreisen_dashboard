@@ -4,6 +4,7 @@ class ApplicationRecord < ActiveRecord::Base
   include ApplicationHelper
   self.abstract_class = true
   require 'open-uri'
+  require 'headless'
 
   def main_site
     Hotel.where(active:true).where.not(origin_url: [nil, '']).each do |hot|
@@ -62,8 +63,7 @@ class ApplicationRecord < ActiveRecord::Base
   end
 
   def ewtc_site
-    doc = Nokogiri::HTML(open('https://www.ewtc.de/Dubai/Dubai-Strand/Hotel-Preise-Sommer/Burj-Al-Arab-Jumeirah.html#hotelpreise',
-                              ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE))
+    doc = Nokogiri::HTML(open('https://www.ewtc.de/Dubai/Dubai-Strand/Hotel-Preise-Sommer/Burj-Al-Arab-Jumeirah.html#hotelpreise', ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE))
     table = doc.css('#preiseuebersicht')
     count = table.css('tr').count
     mont = ''
@@ -92,7 +92,10 @@ class ApplicationRecord < ActiveRecord::Base
   end
 
   def dertour_site(sort_link, hot)
-    browser =  Watir::Browser.new :chrome, proxy: proxy, headless: true
+    Headless.ly do |headless|
+      begin
+    driver = Webdriver::UserAgent.driver(browser: :chrome, proxy: proxy)
+    browser =  Watir::Browser.new driver
     (Date.current.month..12).each do |i|
       i = i.to_s.length == 1 ? '0' + i.to_s : i.to_s
       link = sort_link + "?earliestStart=01.#{i}.#{Date.current.year}&latestEnd=08.#{i}.#{Date.current.year}&locationCode=CIT_120491&locationName=Soneva+Fushi%2C+Süd-Maalhosmadulu-Atoll%2C+Nördliche+Atolle%2C+Malediven&numberOfAdults=2&numberOfUnits=1&productType=HOTEL&sorting=price_asc&tab=angebote"
@@ -107,7 +110,9 @@ class ApplicationRecord < ActiveRecord::Base
         new_price(sort_link, hot, title, price, h, s, box, link, i)
       end
     end
-    browser.close
+    browser.quit
+      end
+    end
   end
 
   def airtour_site(sort_link, hot)
