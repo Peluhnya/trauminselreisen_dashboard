@@ -62,7 +62,8 @@ class ApplicationRecord < ActiveRecord::Base
   end
 
   def ewtc_site
-    doc = Nokogiri::HTML(open('https://www.ewtc.de/Dubai/Dubai-Strand/Hotel-Preise-Sommer/Burj-Al-Arab-Jumeirah.html#hotelpreise', ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE))
+    doc = Nokogiri::HTML(open('https://www.ewtc.de/Dubai/Dubai-Strand/Hotel-Preise-Sommer/Burj-Al-Arab-Jumeirah.html#hotelpreise',
+                              ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE))
     table = doc.css('#preiseuebersicht')
     count = table.css('tr').count
     mont = ''
@@ -72,8 +73,64 @@ class ApplicationRecord < ActiveRecord::Base
     end
   end
 
+  def airtour
+    hss = HotelSite.where(site_id: 3).where.not(link: [nil, ''])
+    hss.each do |hs|
+      sort_link = hs.link
+      hot = hs.hotel.name
+      airtour_site(sort_link, hot)
+    end
+  end
+
+  def dertour
+    hss = HotelSite.where(site_id: 6).where.not(link: [nil, ''])
+    hss.each do |hs|
+      sort_link = hs.link
+      hot = hs.hotel.name
+      dertour_site(sort_link, hot)
+    end
+  end
+
+  def dertour_site(sort_link, hot)
+    browser =  Watir::Browser.new :chrome, proxy: proxy, headless: true
+    (Date.current.month..12).each do |i|
+      i = i.to_s.length == 1 ? '0' + i.to_s : i.to_s
+      link = sort_link + "?earliestStart=01.#{i}.#{Date.current.year}&latestEnd=08.#{i}.#{Date.current.year}&locationCode=CIT_120491&locationName=Soneva+Fushi%2C+Süd-Maalhosmadulu-Atoll%2C+Nördliche+Atolle%2C+Malediven&numberOfAdults=2&numberOfUnits=1&productType=HOTEL&sorting=price_asc&tab=angebote"
+      browser.goto link
+      sleep 30
+      doc = Nokogiri::HTML.parse(browser.html)
+      doc.css('.ProductOffer.column.small-12').each do |box|
+        title = box.css('.ProductOffer__categoryName.text-copy-small').text.gsub('1x','').strip
+        price = box.css('.Price__value.regtest-currency-value').text.gsub('.','').gsub(",-",'')
+        h = Hotel.find_by_name(hot)
+        s = Site.find(6)
+        new_price(sort_link, hot, title, price, h, s, box, link, i)
+      end
+    end
+    browser.close
+  end
+
+  def airtour_site(sort_link, hot)
+    browser =  Watir::Browser.new :chrome, proxy: proxy, headless: true
+    (Date.current.month..12).each do |i|
+      i = i.to_s.length == 1 ? '0' + i.to_s : i.to_s
+      link = sort_link + "?searchScope=HOTEL&showTotalPrice=true&startDate=#{Date.current.year}-#{i}-01&endDate=#{Date.current.year}-#{i}-08&duration=7&sortOffersField=roomType&sortOffersAsc=false&boardTypes=HB&links=1"
+      browser.goto link 
+      sleep 30
+      doc = Nokogiri::HTML.parse(browser.html)
+      doc.css('.resultListItems article').each do |box|
+        title = box.css('.productInformationLink.ng-binding').text.strip
+        price = box.css('span.price.ng-binding').text
+        h = Hotel.find_by_name(hot)
+        s = Site.find(3)
+        new_price(sort_link, hot, title, price, h, s, box, link, i)
+      end
+    end
+    browser.close
+  end
+
   def tui
-    hss = HotelSite.where.not(link: [nil, ''])
+    hss = HotelSite.where(site_id: 2).where.not(link: [nil, ''])
     hss.each do |hs|
       sort_link = hs.link
       hot = hs.hotel.name
@@ -94,37 +151,7 @@ class ApplicationRecord < ActiveRecord::Base
         price = box.css('p.pt__cta-price span.amount').text.gsub('.','')
         h = Hotel.find_by_name(hot)
         s = Site.find_by_name('TUI')
-        hs = h.hotel_sites.where(site_id: s.id).take
-        origin = h.origins.where(name: title).take
-        unless origin.nil?
-        ht = HotelType.find_by(origin_id: origin.id, hotel_site_id: hs.id)
-        ht = if ht.present?
-               ht
-             else
-               HotelType.create(origin_id: origin.id, link: link, hotel_site_id: hs.id)
-             end
-        omp = origin.month_prices.where(month: months_compact[i.to_i - 1], year: Date.current.year).take
-        mp = MonthPrice.find_by(hotel_type_id: ht.id, month: months_compact[i.to_i - 1], year: Date.current.year)
-        if omp.nil? 
-          @option = 'unchanged'
-        else
-          or_price = omp.price * 2 * 7
-          if or_price > price.to_i
-            @option = 'up'
-          elsif or_price < price.to_i
-            @option = 'down'
-          else
-            @option = 'unchanged'
-          end
-        end
-        if mp.present?
-          unless (price == mp.price) && price != 0
-            mp.update(price: price, price_option: @option)
-          end
-        else
-          mp = MonthPrice.create(hotel_type_id: ht.id, link: sort_link, price: price, month: months_compact[i.to_i - 1], year: Date.current.year, price_option: @option)
-        end
-      end
+        new_price(sort_link, hot, title, price, h, s, box, link, i)
       end
     end
     browser.close
@@ -136,4 +163,42 @@ class ApplicationRecord < ActiveRecord::Base
       ssl:  '35.158.114.186:3128'
     }
   end
+
+  def new_price(sort_link, hot, title, price, h, s, box, link, i)
+    hs = h.hotel_sites.where(site_id: s.id).take
+    origin = h.origins.where(name: title).take
+    if origin.nil?
+      origin = Origin.create(name: title, hotel_id: h.id)
+    end
+    ht = HotelType.find_by(origin_id: origin.id, hotel_site_id: hs.id)
+    ht = if ht.present?
+           ht
+         else
+           HotelType.create(origin_id: origin.id, link: link, hotel_site_id: hs.id)
+         end
+    
+    omp = origin.month_prices.where(month: months_compact[i.to_i - 1], year: Date.current.year).take
+    mp = MonthPrice.find_by(hotel_type_id: ht.id, month: months_compact[i.to_i - 1], year: Date.current.year)
+    if omp.nil? 
+      @option = 'unchanged'
+    else
+      or_price = omp.price * 2 * 7
+      if or_price > price.to_i
+        @option = 'up'
+      elsif or_price < price.to_i
+        @option = 'down'
+      else
+        @option = 'unchanged'
+      end
+    end
+    if mp.present?
+      unless (price == mp.price) && price != 0
+        mp.update(price: price, price_option: @option)
+      end
+    else
+      mp = MonthPrice.create(hotel_type_id: ht.id, link: sort_link, price: price, month: months_compact[i.to_i - 1], year: Date.current.year, price_option: @option)
+    
+    end
+  end
+
 end

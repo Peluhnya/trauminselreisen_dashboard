@@ -24,4 +24,13 @@ module ApplicationHelper
   def abbr_months_before_current
     abbr_months_compact.first(Date.today.month-1)
   end
+
+  def price_form(n)
+    if n>0
+      number_to_currency(n, unit: "€", format: "%u%n")
+    else
+      '-'
+    end
+  end
+
 end

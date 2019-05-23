@@ -70,8 +70,9 @@
                 <% mpss = mps.where(month: month, year: Date.current.year) %>
                   <td>
                     <div class="cel-inner">
-                      <span class="top-price price-<%= mpss.take.price_option if mpss.take%>">€<%= mpss.sum(:price) %></span>
-                      <span class="bottom-price">€<%= (origin.price * 2 * 7) if origin %></span>
+                      <span class="top-price price-<%= mpss.take.price_option if mpss.take%>"> <%= price_form(mpss.sum(:price)) %>
+              </span>
+                      <span class="bottom-price"><%= price_form(((origin.price * 2 * 7) if origin) || 0) %></span>
                     </div>
                   </td>
                 <% end %>
@@ -81,9 +82,9 @@
                 <td>
                     <div class="cel-inner">
                       <span class="top-price price-<%= mpss.take.price_option if mpss.take %>">
-                        €<%= mpss.sum(:price) %> 
-                      </span>
-                      <span class="bottom-price">€<%= (origin.price * 2 * 7) if origin %></span>
+                 <%= price_form(mpss.sum(:price)) %>
+              </span>
+                      <span class="bottom-price"><%= price_form(((origin.price * 2 * 7) if origin) || 0) %></span>
                     </div>
                   </td>
                   <% end %>
