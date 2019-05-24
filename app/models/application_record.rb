@@ -91,11 +91,39 @@ class ApplicationRecord < ActiveRecord::Base
     end
   end
 
+  def fti
+    hss = HotelSite.where(site_id: 6).where.not(link: [nil, ''])
+    hss.each do |hs|
+      sort_link = hs.link
+      hot = hs.hotel.name
+      fti_site(sort_link, hot)
+    end
+  end
+
+
+  def fti_site(sort_link, hot)
+    browser =  Watir::Browser.new :chrome, proxy: proxy, headless: true
+
+        (Date.current.month..12).each do |i|
+          i = i.to_s.length == 1 ? '0' + i.to_s : i.to_s
+          link = sort_link + "?earliestStart=01.#{i}.#{Date.current.year}&latestEnd=08.#{i}.#{Date.current.year}&locationCode=CIT_120491&locationName=Soneva+Fushi%2C+Süd-Maalhosmadulu-Atoll%2C+Nördliche+Atolle%2C+Malediven&numberOfAdults=2&numberOfUnits=1&productType=HOTEL&sorting=price_asc&tab=angebote"
+          "https://booking.fti.de/offer?ibe=package&bSearchformSent=1&depap=FRA&ddate=#{Date.current.year}-#{i}-01&rdate=#{Date.current.year}-#{i}-08&adult=2&rid=353&cyid=32&aid=66289&rgid=10020&board=3&dur=exact&brand=FTI"
+          browser.goto link
+          sleep 30
+          doc = Nokogiri::HTML.parse(browser.html)
+          doc.css('.ProductOffer.column.small-12').each do |box|
+            title = box.css('.ProductOffer__categoryName.text-copy-small').text.gsub('1x','').strip
+            price = box.css('.Price__value.regtest-currency-value').text.gsub('.','').gsub(",-",'')
+            h = Hotel.find_by_name(hot)
+            s = Site.find(6)
+            new_price(sort_link, hot, title, price, h, s, box, link, i)
+          end
+        end
+        browser.quit
+  end
+
   def dertour_site(sort_link, hot)
-    Headless.ly do |headless|
-      begin
-    driver = Webdriver::UserAgent.driver(browser: :chrome, proxy: proxy)
-    browser =  Watir::Browser.new driver
+    browser =  Watir::Browser.new :chrome, proxy: proxy, headless: true
     (Date.current.month..12).each do |i|
       i = i.to_s.length == 1 ? '0' + i.to_s : i.to_s
       link = sort_link + "?earliestStart=01.#{i}.#{Date.current.year}&latestEnd=08.#{i}.#{Date.current.year}&locationCode=CIT_120491&locationName=Soneva+Fushi%2C+Süd-Maalhosmadulu-Atoll%2C+Nördliche+Atolle%2C+Malediven&numberOfAdults=2&numberOfUnits=1&productType=HOTEL&sorting=price_asc&tab=angebote"
@@ -111,8 +139,7 @@ class ApplicationRecord < ActiveRecord::Base
       end
     end
     browser.quit
-      end
-    end
+
   end
 
   def airtour_site(sort_link, hot)
