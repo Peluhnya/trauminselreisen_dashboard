@@ -100,6 +100,33 @@ class ApplicationRecord < ActiveRecord::Base
     end
   end
 
+  def booking
+    hss = HotelSite.where(site_id: 9).where.not(link: [nil, ''])
+    hss.each do |hs|
+      sort_link = hs.link
+      hot = hs.hotel.name
+      booking_site(sort_link, hot)
+    end
+  end
+
+  def booking_site(sort_link, hot)
+    browser =  Watir::Browser.new :chrome, proxy: proxy, headless: true
+    (Date.current.month..12).each do |i|
+      i = i.to_s.length == 1 ? '0' + i.to_s : i.to_s
+      link = "#{sort_link}?label=gen173nr-1FCAEoggI46AdIM1gEaOkBiAEBmAEhuAEXyAEM2AEB6AEB-AELiAIBqAID;sid=d76943f74c8c731fcb31e8e7499fefe0;all_sr_blocks=24109802_133426082_2_42_0;checkin=#{Date.current.year}-#{i}-01;checkout=#{Date.current.year}-#{i}-08;dest_id=238660;dest_type=city;dist=0;hapos=1;highlighted_blocks=24109802_133426082_2_42_0;hpos=1;room1=A%2CA;sb_price_type=total;sr_order=popularity;srepoch=1551197576;srpvid=dc9f7204e0e400c0;type=total;ucfs=1&#hotelTmpl"
+      browser.goto link
+      sleep 5
+      doc = Nokogiri::HTML.parse(browser.html)
+      doc.css('.hprt-table tbody tr.hprt-table-last-row').each do |box|
+        title = box.css('.hprt-roomtype-icon-link').text.strip
+        price = box.css('.hprt-price-price-standard').text.gsub('.','').strip.gsub("€ ","")
+        h = Hotel.find_by_name(hot)
+        s = Site.find(9)
+        new_price(sort_link, hot, title, price, h, s, box, link, i)
+      end
+    end
+    browser.quit
+  end
 
   def fti_site(sort_link, hot)
 
@@ -113,6 +140,7 @@ class ApplicationRecord < ActiveRecord::Base
           doc.css('.list-offer-items').each do |box|
             title = box.css('.items-rooms span')[1].text.strip
             price = box.css('.price-amount').text.gsub('.','').strip
+            price += price
             h = Hotel.find_by_name(hot)
             s = Site.find(4)
             new_price(sort_link, hot, title, price, h, s, box, link, i)
