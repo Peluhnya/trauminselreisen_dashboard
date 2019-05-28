@@ -153,7 +153,7 @@ class ApplicationRecord < ActiveRecord::Base
     browser =  Watir::Browser.new :chrome, proxy: proxy, headless: true
     (Date.current.month..12).each do |i|
       i = i.to_s.length == 1 ? '0' + i.to_s : i.to_s
-      link = sort_link + "?earliestStart=01.#{i}.#{Date.current.year}&latestEnd=08.#{i}.#{Date.current.year}&locationCode=CIT_120491&locationName=Soneva+Fushi%2C+Süd-Maalhosmadulu-Atoll%2C+Nördliche+Atolle%2C+Malediven&numberOfAdults=2&numberOfUnits=1&productType=HOTEL&sorting=price_asc&tab=angebote"
+      link = sort_link + "?earliestStart=01.#{i}.#{Date.current.year}&latestEnd=08.#{i}.#{Date.current.year}&numberOfAdults=2&numberOfUnits=1&productType=HOTEL&sorting=price_asc&tab=angebote"
       browser.goto link
       sleep 30
       doc = Nokogiri::HTML.parse(browser.html)
