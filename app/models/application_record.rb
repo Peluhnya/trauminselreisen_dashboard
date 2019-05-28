@@ -119,7 +119,7 @@ class ApplicationRecord < ActiveRecord::Base
       doc = Nokogiri::HTML.parse(browser.html)
       doc.css('.hprt-table tbody tr.hprt-table-last-row').each do |box|
         title = box.css('.hprt-roomtype-icon-link').text.strip
-        price = box.css('.hprt-price-price-standard').text.gsub('.','').strip.gsub("€ ","")
+        price = box.css('.hprt-price-price-standard').text.gsub('.','').strip.gsub("€ ","")
         h = Hotel.find_by_name(hot)
         s = Site.find(9)
         new_price(sort_link, hot, title, price, h, s, box, link, i)
