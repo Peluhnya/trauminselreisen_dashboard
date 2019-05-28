@@ -102,8 +102,8 @@ class ApplicationRecord < ActiveRecord::Base
 
 
   def fti_site(sort_link, hot)
-    browser =  Watir::Browser.new :chrome, proxy: proxy
 
+    browser =  Watir::Browser.new :chrome, proxy: proxy, headless: true
         (Date.current.month..12).each do |i|
           i = i.to_s.length == 1 ? '0' + i.to_s : i.to_s
           link = "https://booking.fti.de/offer?ibe=package&bSearchformSent=1&depap=FRA&ddate=#{Date.current.year}-#{i}-01&rdate=#{Date.current.year}-#{i}-08&adult=2&#{sort_link}&brand=FTI,XFTI"
