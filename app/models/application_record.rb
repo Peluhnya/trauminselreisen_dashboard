@@ -23,7 +23,9 @@ class ApplicationRecord < ActiveRecord::Base
         twomonth_i = I18n.t("date.month_names").compact.index twomonth
         ms = I18n.t("date.month_names").compact
         ms.shift(onemonth_i)
-        ms.pop(11-twomonth_i)
+        unless twomonth == 12
+          ms.pop(11-twomonth)
+        end
         hotels = item.css('.room-toggle')
         hotels.each do |hotel|
         name = hotel.css(".room-name").text.split(' (').first
@@ -143,7 +145,9 @@ class ApplicationRecord < ActiveRecord::Base
           twomonth_i = I18n.t("date.abbr_month_names").compact.index twomonth
           ms = I18n.t("date.abbr_month_names").compact
           ms.shift(onemonth_i)
-          ms.pop(11-twomonth_i)
+          unless twomonth == 12
+            ms.pop(11-twomonth)
+          end
 
         end
       else
