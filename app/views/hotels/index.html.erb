@@ -56,6 +56,7 @@
           <table class="table inner-table">
             <tbody>
               <% hs.hotel_types.each do |ht| %>
+            <% cache ht do %>
               <% mps = ht.month_prices %>
               
               <tr>
@@ -89,6 +90,7 @@
                   </td>
                   <% end %>
               </tr>
+            <% end %>
               <% end %>
             </tbody>
           </table>
