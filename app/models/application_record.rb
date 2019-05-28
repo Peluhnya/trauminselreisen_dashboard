@@ -62,14 +62,81 @@ class ApplicationRecord < ActiveRecord::Base
     end
   end
 
-  def ewtc_site
-    doc = Nokogiri::HTML(open('https://www.ewtc.de/Dubai/Dubai-Strand/Hotel-Preise-Sommer/Burj-Al-Arab-Jumeirah.html#hotelpreise', ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE))
+  def ewtc_site(sort_link, hot, hs)
+    doc = Nokogiri::HTML(open(sort_link, ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE))
     table = doc.css('#preiseuebersicht')
-    count = table.css('tr').count
-    mont = ''
-    table.css('tr')[1..count].each do |tr|
-      if months_compact.any? { |m| tr.text.include? m }
+    cls_value = nil
+    ms = nil
+    table.css('tr').each do |line|
+      unless line.attributes.values.first.nil?
+        cls = line.attributes.values.first.value
+        if cls == "bg_light_brown"
+          cls_value =  line.text.strip
+          months = cls_value.split(' - ')
+          onemonth = nil
+          twomonth = nil
+          I18n.t("date.abbr_month_names").compact.each do |m|
+            onemonth = m if (months.first.include? m)
+            twomonth = m if (months.last.include? m)
+          end
+          onemonth_i = I18n.t("date.abbr_month_names").compact.index onemonth
+          twomonth_i = I18n.t("date.abbr_month_names").compact.index twomonth
+          ms = I18n.t("date.abbr_month_names").compact
+          ms.shift(onemonth_i)
+          ms.pop(11-twomonth_i)
+
+        end
+      else
+        name = line.css('td').first.text.strip
+        origin = Origin.find_by_name(name)
+        unless origin.present?
+          origin = Origin.create(name: name, hotel_id: hot.id)
+        end
+        price = line.css('td')[3].text.strip.gsub(" €",'').gsub(".",'')
+
+        ms.each do |month|
+
+          i = I18n.t("date.abbr_month_names").compact.index month
+          ht = HotelType.find_by(origin_id: origin.id, hotel_site_id: hs.id)
+          ht = if ht.present?
+                 ht
+               else
+                 HotelType.create(origin_id: origin.id, link: sort_link, hotel_site_id: hs.id)
+               end
+
+          omp = origin.month_prices.where(month: months_compact[i], year: Date.current.year).take
+          mp = MonthPrice.find_by(hotel_type_id: ht.id, month: months_compact[i], year: Date.current.year)
+          if omp.nil?
+            @option = 'unchanged'
+          else
+            or_price = omp.price * 2 * 7
+            if or_price > price.to_i
+              @option = 'up'
+            elsif or_price < price.to_i
+              @option = 'down'
+            else
+              @option = 'unchanged'
+            end
+          end
+          if mp.present?
+            unless (price == mp.price) && price != 0
+              mp.update(price: price, price_option: @option)
+            end
+          else
+            mp = MonthPrice.create(hotel_type_id: ht.id, link: sort_link, price: price, month: months_compact[i], year: Date.current.year, price_option: @option)
+
+          end
+        end
       end
+    end
+  end
+
+  def ewtc
+    hss = HotelSite.where(site_id: 8).where.not(link: [nil, ''])
+    hss.each do |hs|
+      sort_link = hs.link
+      hot = hs.hotel
+      ewtc_site(sort_link, hot, hs)
     end
   end
 

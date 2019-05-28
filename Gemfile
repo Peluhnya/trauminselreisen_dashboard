@@ -33,6 +33,8 @@ gem 'selenium-webdriver'
 gem 'chromedriver-helper'
 gem 'watir'
 gem 'webdriver-user-agent'
+gem 'progressive_render'
+
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
