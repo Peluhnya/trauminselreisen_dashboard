@@ -52,6 +52,72 @@ class ApplicationRecord < ActiveRecord::Base
     end
   end
 
+  def jumbo_site(sort_link, hot, hs)
+    doc = Nokogiri::HTML(open(sort_link, ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE))
+    cls_value = nil
+    ms = nil
+    doc.xpath("/html/body/div[1]/div/div[2]/table/tr[6]/td[2]/table[2]/tr").each do |line|
+      if line.css("td.text-left-ein").text.include? " bis "
+        dates = line.css("td.text-left-ein").text.strip.split(' bis ')
+        onemonth = Date.parse(dates.first).month
+        twomonth = Date.parse(dates.last).month
+        ms = I18n.t("date.month_names").compact
+        ms.shift(onemonth)
+        ms.pop(11-twomonth)
+        origin = Origin.find_by_name(cls_value)
+        unless origin.present?
+          origin = Origin.create(name: cls_value, hotel_id: hot.id)
+        end
+        if line.css("td")[2].present?
+          price = line.css("td")[2].text.strip
+          price = price.to_i * 2 * 7
+          ms.each do |month|
+
+            i = I18n.t("date.month_names").compact.index month
+            ht = HotelType.find_by(origin_id: origin.id, hotel_site_id: hs.id)
+            ht = if ht.present?
+                   ht
+                 else
+                   HotelType.create(origin_id: origin.id, link: sort_link, hotel_site_id: hs.id)
+                 end
+
+            omp = origin.month_prices.where(month: months_compact[i], year: Date.current.year).take
+            mp = MonthPrice.find_by(hotel_type_id: ht.id, month: months_compact[i], year: Date.current.year)
+            if omp.nil?
+              @option = 'unchanged'
+            else
+              or_price = omp.price * 2 * 7
+              if or_price > price.to_i
+                @option = 'up'
+              elsif or_price < price.to_i
+                @option = 'down'
+              else
+                @option = 'unchanged'
+              end
+            end
+            if mp.present?
+              unless (price == mp.price) && price != 0
+                mp.update(price: price, price_option: @option)
+              end
+            else
+
+              mp = MonthPrice.create(hotel_type_id: ht.id, link: sort_link, price: price, month: months_compact[i], year: Date.current.year, price_option: @option)
+
+            end
+          end
+        end
+      else
+        if line.css("td.text-left-ein").text.include? " ("
+          cls_value = line.css("td.text-left-ein").text.split(" (").first
+          if cls_value == "()" or cls_value == ""
+            cls_value = nil
+          end
+        end
+      end
+    end
+  end
+
+
   def ewtc_site(sort_link, hot, hs)
     doc = Nokogiri::HTML(open(sort_link, ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE))
     table = doc.css('#preiseuebersicht')
@@ -83,7 +149,7 @@ class ApplicationRecord < ActiveRecord::Base
           origin = Origin.create(name: name, hotel_id: hot.id)
         end
         price = line.css('td')[3].text.strip.gsub(" €",'').gsub(".",'')
-
+        price+=price
         ms.each do |month|
 
           i = I18n.t("date.abbr_month_names").compact.index month
@@ -118,6 +184,15 @@ class ApplicationRecord < ActiveRecord::Base
           end
         end
       end
+    end
+  end
+
+  def jumbo
+    hss = HotelSite.where(site_id: 5).where.not(link: [nil, ''])
+    hss.each do |hs|
+      sort_link = hs.link
+      hot = hs.hotel
+      jumbo_site(sort_link, hot, hs)
     end
   end
 
