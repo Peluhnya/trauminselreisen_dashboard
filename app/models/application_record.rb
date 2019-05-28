@@ -19,21 +19,11 @@ class ApplicationRecord < ActiveRecord::Base
           onemonth = m if (months.first.include? m)
           twomonth = m if (months.last.include? m)
         end
+        onemonth_i = I18n.t("date.month_names").compact.index onemonth
+        twomonth_i = I18n.t("date.month_names").compact.index twomonth
         ms = I18n.t("date.month_names").compact
-        ms.each do |m|
-          if m == onemonth
-            break
-          else
-            ms.shift
-          end
-        end
-        ms.reverse.each do |m|
-          if m == twomonth
-            break
-          else
-            ms.pop
-          end
-        end
+        ms.shift(onemonth_i)
+        ms.pop(11-twomonth_i)
         hotels = item.css('.room-toggle')
         hotels.each do |hotel|
         name = hotel.css(".room-name").text.split(' (').first
