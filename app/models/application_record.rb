@@ -62,8 +62,11 @@ class ApplicationRecord < ActiveRecord::Base
         onemonth = Date.parse(dates.first).month
         twomonth = Date.parse(dates.last).month
         ms = I18n.t("date.month_names").compact
+        puts onemonth
+        puts twomonth
         ms.shift(onemonth)
         ms.pop(11-twomonth)
+
         origin = Origin.find_by_name(cls_value)
         unless origin.present?
           origin = Origin.create(name: cls_value, hotel_id: hot.id)
