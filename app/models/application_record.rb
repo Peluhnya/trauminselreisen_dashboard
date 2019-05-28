@@ -65,8 +65,9 @@ class ApplicationRecord < ActiveRecord::Base
         puts onemonth
         puts twomonth
         ms.shift(onemonth)
-        ms.pop(11-twomonth)
-
+        unless twomonth == 12
+          ms.pop(11-twomonth)
+        end
         origin = Origin.find_by_name(cls_value)
         unless origin.present?
           origin = Origin.create(name: cls_value, hotel_id: hot.id)
