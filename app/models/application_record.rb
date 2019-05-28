@@ -42,7 +42,7 @@ class ApplicationRecord < ActiveRecord::Base
           origin = Origin.create(name: name, hotel_id: hot.id)
         end
         price_line = hotel.css(".price-row").first
-        price = price_line.css(".price").text.gsub(" €",'').gsub(".", "")
+        price = price_line.css(".price").text.gsub(" €",'').gsub(".", "").strip
           ms.each do |month|
             mp = MonthPrice.find_by(origin_id: origin.id, month: month, year: 2019)
             if mp.present?
@@ -92,7 +92,7 @@ class ApplicationRecord < ActiveRecord::Base
   end
 
   def fti
-    hss = HotelSite.where(site_id: 6).where.not(link: [nil, ''])
+    hss = HotelSite.where(site_id: 4).where.not(link: [nil, ''])
     hss.each do |hs|
       sort_link = hs.link
       hot = hs.hotel.name
@@ -102,20 +102,19 @@ class ApplicationRecord < ActiveRecord::Base
 
 
   def fti_site(sort_link, hot)
-    browser =  Watir::Browser.new :chrome, proxy: proxy, headless: true
+    browser =  Watir::Browser.new :chrome, proxy: proxy
 
         (Date.current.month..12).each do |i|
           i = i.to_s.length == 1 ? '0' + i.to_s : i.to_s
-          link = sort_link + "?earliestStart=01.#{i}.#{Date.current.year}&latestEnd=08.#{i}.#{Date.current.year}&locationCode=CIT_120491&locationName=Soneva+Fushi%2C+Süd-Maalhosmadulu-Atoll%2C+Nördliche+Atolle%2C+Malediven&numberOfAdults=2&numberOfUnits=1&productType=HOTEL&sorting=price_asc&tab=angebote"
-          "https://booking.fti.de/offer?ibe=package&bSearchformSent=1&depap=FRA&ddate=#{Date.current.year}-#{i}-01&rdate=#{Date.current.year}-#{i}-08&adult=2&rid=353&cyid=32&aid=66289&rgid=10020&board=3&dur=exact&brand=FTI"
+          link = "https://booking.fti.de/offer?ibe=package&bSearchformSent=1&depap=FRA&ddate=#{Date.current.year}-#{i}-01&rdate=#{Date.current.year}-#{i}-08&adult=2&#{sort_link}&brand=FTI,XFTI"
           browser.goto link
           sleep 30
           doc = Nokogiri::HTML.parse(browser.html)
-          doc.css('.ProductOffer.column.small-12').each do |box|
-            title = box.css('.ProductOffer__categoryName.text-copy-small').text.gsub('1x','').strip
-            price = box.css('.Price__value.regtest-currency-value').text.gsub('.','').gsub(",-",'')
+          doc.css('.list-offer-items').each do |box|
+            title = box.css('.items-rooms span')[1].text.strip
+            price = box.css('.price-amount').text.gsub('.','').strip
             h = Hotel.find_by_name(hot)
-            s = Site.find(6)
+            s = Site.find(4)
             new_price(sort_link, hot, title, price, h, s, box, link, i)
           end
         end
