@@ -29,6 +29,7 @@
 </head>
 
 <body>
+<% if user_signed_in? %>
 <div class="app header-success-gradient">
   <div class="layout">
     <!-- Header START -->
@@ -93,6 +94,9 @@
     </div>
   </div>
 </div>
+<% else %>
+  <%= yield %>
+  <% end %>
 <script src="/assets/js/vendor.js"></script>
 
 <script src="/assets/js/app.min.js"></script>
