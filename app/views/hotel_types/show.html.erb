@@ -1,13 +1,14 @@
 <div class="table-responsive">
   <table class="table top-table">
     <thead class="first-level">
-      <tr>
-        <th class="row-head">
-          <div class="cel-inner">
-            <div class="top-title"><span class="collapse-arrow collapse-arrow-down"></span><%= @hotel_type.origin.name %></div>
+    <tr>
+      <th class="row-head">
+        <div class="cel-inner">
+          <div class="top-title"><span class="collapse-arrow collapse-arrow-down"></span><%= @hotel_type.origin.name %>
           </div>
-        </th>
-        <% months_after_current.each do |month| %>
+        </div>
+      </th>
+      <% months_after_current.each do |month| %>
         <th>
           <div class="cel-inner">
             <div class="top-title-col"><%= month.upcase %></div>
@@ -17,8 +18,8 @@
             </div>
           </div>
         </th>
-        <% end %> 
-        <% months_before_current.each do |month| %>
+      <% end %>
+      <% months_before_current.each do |month| %>
         <th>
           <div class="cel-inner">
             <div class="top-title-col"><%= month.upcase %></div>
@@ -28,46 +29,47 @@
             </div>
           </div>
         </th>
-        <% end %>
-      </tr>
+      <% end %>
+    </tr>
     </thead>
 
     <tbody class="second-level" style="display: table-row-group;">
-   <% @hotel_type.origin.hotel_types.each do |ht| %>
+    <% @hotel_type.origin.hotel_types.each do |ht| %>
       <tr>
         <% hs = ht.hotel_site %>
         <td class="row-head">
-            <div class="cel-inner">
-              <div class="inner-title"><span class="second-level-title__img"><%= image_tag url_for(hs.site.logo) if hs.site.logo.attached? %></span>
-   <%= hs.site.name %>
-              </div>
-            </div>
-          </td>
-         
-      <% months_after_current.each do |month| %>
-      <%  origin = ht.origin.month_prices.where(month: month, year: Date.current.year).take %>
-      <% mpss = ht.month_prices.where(month: month, year: Date.current.year) %>
-        <td>
           <div class="cel-inner">
-            <span class="top-price price-<%= mpss.take.price_option if mpss.take%>"><%= price_form(mpss.sum(:price)) %></span>
-            <span class="bottom-price"><%= price_form(((origin.price * 2 * 7) if origin) || 0)  %></span>
+            <div class="inner-title">
+              <span class="second-level-title__img"><%= image_tag url_for(hs.site.logo) if hs.site.logo.attached? %></span>
+              <%= hs.site.name %>
+            </div>
           </div>
         </td>
+
+        <% months_after_current.each do |month| %>
+          <% origin = ht.origin.month_prices.where(month: month, year: Date.current.year).take %>
+          <% mpss = ht.month_prices.where(month: month, year: Date.current.year) %>
+          <td>
+            <div class="cel-inner">
+              <span class="top-price price-<%= mpss.take.price_option if mpss.take %>"><%= price_form(mpss.sum(:price)) %></span>
+              <span class="bottom-price"><%= price_form(((origin.price * 2 * 7) if origin) || 0) %></span>
+            </div>
+          </td>
         <% end %>
         <% months_before_current.each do |month| %>
-        <%  origin = ht.origin.month_prices.where(month: month, year: Date.current.year).take %>
-        <% mpss = ht.month_prices.where(month: month, year: Date.current.year) %>
-        <td>
+          <% origin = ht.origin.month_prices.where(month: month, year: Date.current.year).take %>
+          <% mpss = ht.month_prices.where(month: month, year: Date.current.year) %>
+          <td>
             <div class="cel-inner">
-              <span class="top-price price-<%= mpss.take.price_option if mpss.take%>">
+              <span class="top-price price-<%= mpss.take.price_option if mpss.take %>">
                 <%= price_form(mpss.sum(:price)) %>
               </span>
               <span class="bottom-price"><%= price_form(((origin.price * 2 * 7) if origin) || 0) %></span>
             </div>
           </td>
-          <% end %>
+        <% end %>
       </tr>
-    </tbody>
+      </tbody>
     <% end %>
-  </table>
+    </table>
 </div>

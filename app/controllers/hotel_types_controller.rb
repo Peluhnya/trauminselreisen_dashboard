@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class HotelTypesController < ApplicationController
+  skip_before_action :authenticate_user!, only: [:show]
   before_action :set_hotel_type, only: %i[show edit update destroy]
+  layout 'parser', only: :show
 
   # GET /hotel_types
   # GET /hotel_types.json
@@ -11,7 +13,8 @@ class HotelTypesController < ApplicationController
 
   # GET /hotel_types/1
   # GET /hotel_types/1.json
-  def show; end
+  def show
+  end
 
   # GET /hotel_types/new
   def new

@@ -1,11 +1,18 @@
 # frozen_string_literal: true
 
 class HotelsController < ApplicationController
+  skip_before_action :authenticate_user!, only: [:main]
   before_action :set_hotel, only: %i[show edit update destroy]
-
+  layout 'parser', only: :main
   # GET /hotels
   # GET /hotels.json
   def index
+
+    @q = Hotel.ransack(params[:q])
+    @hotels = @q.result(distinct: true)
+  end
+
+  def main
     @q = Hotel.where(active: true).ransack(params[:q])
     @hotels = @q.result(distinct: true)
   end
@@ -43,7 +50,7 @@ class HotelsController < ApplicationController
   def update
     respond_to do |format|
       if @hotel.update(hotel_params)
-        format.html { redirect_to @hotel, notice: 'Hotel was successfully updated.' }
+        format.html { redirect_to hotels_url, notice: 'Hotel was successfully updated.' }
         format.json { render :show, status: :ok, location: @hotel }
       else
         format.html { render :edit }

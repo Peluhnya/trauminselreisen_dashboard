@@ -1,86 +1,100 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Trauminsel reisen Dashboard</title>
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Trauminsel reisen Dashboard</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" >
-    <link rel="stylesheet" href="/style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-  </head>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" href="http://themenate.com/applicator/dist/assets/images/logo/apple-touch-icon.png">
+  <link rel="shortcut icon" href="assets/images/logo/favicon.png">
 
-  <body>
-         <!-- New start-->
-         <div class="page-wrap">
-            <nav>
-              <div class="nav-wrapper container d-flex justify-content-between align-items-center">
-                <a id="logo-container" href="/" class="brand-logo"><img src="/img/Trauminselreisen-Logo-transparent.png"></a>
-                <ul class="nav-list">
-                  <li class="nav-help" data-toggle="modal" data-target="#helpModal">Help</li>
-                  <li class="nav-sort">
-                  
-                        <select class="nav-sort-select" onchange="window.location.href=this.options[this.selectedIndex].value">
-                            <option selected disabled>Sort by date</option>
-                            <option  VALUE="?q[hotel_types_year_eq]=2019" >2019</option>
-                    
-                    </select>
-                  </li>
-                  <li class="nav-contact"><a href="#">Contact us</a></li>
-                </ul>
-              </div>
-            </nav>
-            <!-- New end -->
-    <main>
-      <div class="container">
+  <!-- core dependcies css -->
+  <link rel="stylesheet" href="/assets/vendor/bootstrap/dist/css/bootstrap.css"/>
+  <link rel="stylesheet" href="/assets/vendor/PACE/themes/blue/pace-theme-minimal.css"/>
+  <link rel="stylesheet" href="/assets/vendor/perfect-scrollbar/css/perfect-scrollbar.min.css"/>
+
+  <!-- page css -->
+
+  <!-- core css -->
+  <link href="/assets/css/font-awesome.min.css" rel="stylesheet">
+  <link href="/assets/css/themify-icons.css" rel="stylesheet">
+  <link href="/assets/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="/assets/css/animate.min.css" rel="stylesheet">
+  <link href="/assets/css/app.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="app header-success-gradient">
+  <div class="layout">
+    <!-- Header START -->
+    <div class="header navbar">
+      <div class="header-container">
+
+
+        <ul class="nav-right">
+
+          <li>
+            <a href="/users/sign_out">
+              <i class="ti-power-off p-r-10"></i>
+              <span>Logout</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- Header END -->
+    <div class="side-nav expand-lg">
+      <div class="side-nav-inner">
+        <ul class="side-nav-menu scrollable">
+          <li class="side-nav-header">
+            <span>Navigation</span>
+          </li>
+          <li class="nav-item dropdown">
+            <a href="/hotels">
+                                <span class="icon-holder">
+                                    <i class="mdi mdi-hotel"></i>
+                                </span>
+              <span class="title">Hotels (<%= Hotel.count %>)</span>
+
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a href="/sites">
+                                <span class="icon-holder">
+                                    <i class="mdi mdi-web"></i>
+                                </span>
+              <span class="title">Sites (<%= Site.count %>)</span>
+
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a href="/hotel_sites">
+                                <span class="icon-holder">
+                                    <i class="mdi mdi-shuffle-variant"></i>
+                                </span>
+              <span class="title">Hotel & Sites relation  (<%= HotelSite.count %>)</span>
+
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="page-container">
+      <div class="main-content">
+        <div class="container-fluid">
           <%= yield %>
         </div>
-        
-      </main>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/assets/js/vendor.js"></script>
 
-              <!-- Modal -->
-              <div class="modal fade" id="helpModal" tabindex="-1" role="dialog" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true"></span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        <h5 class="modal-title text-center">Help</h5>
-                        <div class="help-box d-flex justify-content-start">
-                          <div class="help-box-img"><img src="img/icon-link-blue.svg"></div>
-                          <div class="help-box-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</div>
-                        </div>
-                        <div class="help-box d-flex justify-content-start">
-                          <div class="help-box-img"><img src="img/icon-link-in.svg"></div>
-                          <div class="help-box-text">Tempor incididunt ut labore et dolore magna aliqua. </div>
-                        </div>
-                        <div class="help-box d-flex justify-content-start">
-                          <div class="help-box-img"><img src="img/icon-price-down.svg"></div>
-                          <div class="help-box-text">Ut enim ad minim veniam, quis nostrud </div>
-                        </div>
-                        <div class="help-box d-flex justify-content-start">
-                          <div class="help-box-img"><img src="img/icon-price-up.svg"></div>
-                          <div class="help-box-text">Ut enim ad minim veniam, quis nostrud </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-      <footer>
-          <div class="container">
-            <div class="footer-info">2019 Copyrights © <span>HotelPrice</span></div>
-          </div>
-       
-        </footer>
-
-
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-  <script src="/custom.js"></script>
-  </body>
+<script src="/assets/js/app.min.js"></script>
+</body>
 </html>
