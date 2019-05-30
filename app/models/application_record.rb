@@ -145,8 +145,10 @@ class ApplicationRecord < ActiveRecord::Base
           twomonth_i = I18n.t("date.abbr_month_names").compact.index twomonth
           ms = I18n.t("date.abbr_month_names").compact
           ms.shift(onemonth_i)
-          unless twomonth == 12 and twomonth.nil?
-            ms.pop(11-twomonth_i)
+          unless twomonth == 12
+            unless twomonth.nil?
+              ms.pop(11-twomonth_i)
+            end
           end
 
         end
