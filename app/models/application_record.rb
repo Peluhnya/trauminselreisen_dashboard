@@ -286,7 +286,7 @@ class ApplicationRecord < ActiveRecord::Base
           doc.css('.list-offer-items').each do |box|
             title = box.css('.items-rooms span')[1].text.strip
             price = box.css('.price-amount').text.gsub('.','').strip
-            price += price
+            price = price.to_i * 2
             h = Hotel.find_by_name(hot)
             s = Site.find(4)
             new_price(sort_link, hot, title, price, h, s, box, link, i)
