@@ -9,6 +9,8 @@
 </div>
 <div class="card">
   <div class="card-body">
+    <button data-toggle="modal" data-target="#side-modal-r" class="btn btn-gradient-success">New hotel</button>
+
     <table class="table table-bordered table-striped table-hover">
       <thead>
       <tr>
@@ -56,13 +58,13 @@
                         <p class="m-b-15 font-size-13">Please edit hotel</p>
                         <%= form_with(model: hotel, local: true) do |form| %>
                           <div class="form-group">
-                            <%= form.text_field :name, class: "form-control" %>
+                            <%= form.text_field :name, class: "form-control", placeholder: 'Name' %>
                           </div>
                           <div class="form-group">
-                            <%= form.text_field :city, class: "form-control" %>
+                            <%= form.text_field :city, class: "form-control", placeholder: 'City'  %>
                           </div>
                           <div class="form-group">
-                            <%= form.text_field :origin_url, class: "form-control" %>
+                            <%= form.text_field :origin_url, class: "form-control", placeholder: 'origin url'  %>
                           </div>
                           <div >
                             <%= form.check_box :active %>
@@ -84,5 +86,42 @@
       <% end %>
       </tbody>
     </table>
+  </div>
+</div>
+<div class="modal modal-right fade " id="side-modal-r">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="side-modal-wrapper">
+        <div class="vertical-align">
+          <div class="table-cell">
+            <div class="modal-body">
+              <div class="p-h-15">
+                <h4>New hotel</h4>
+                <p class="m-b-15 font-size-13">Please new hotel</p>
+                <%= form_with(model: @hotel, local: true) do |form| %>
+                  <div class="form-group">
+                    <%= form.text_field :name, class: "form-control", placeholder: 'Name' %>
+                  </div>
+                  <div class="form-group">
+                    <%= form.text_field :city, class: "form-control", placeholder: 'City'  %>
+                  </div>
+                  <div class="form-group">
+                    <%= form.text_field :origin_url, class: "form-control", placeholder: 'origin url'  %>
+                  </div>
+                  <div >
+                    <%= form.check_box :active %>
+                    <label for="agreement">Active?</label>
+                  </div>
+                  <br>
+                  <%= form.submit 'Save', class: "btn btn-success" %>
+
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
 </div>

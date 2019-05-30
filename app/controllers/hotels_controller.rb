@@ -10,6 +10,7 @@ class HotelsController < ApplicationController
 
     @q = Hotel.ransack(params[:q])
     @hotels = @q.result(distinct: true)
+    @hotel = Hotel.new
   end
 
   def main
@@ -36,7 +37,7 @@ class HotelsController < ApplicationController
 
     respond_to do |format|
       if @hotel.save
-        format.html { redirect_to @hotel, notice: 'Hotel was successfully created.' }
+        format.html { redirect_to hotels_url, notice: 'Hotel was successfully created.' }
         format.json { render :show, status: :created, location: @hotel }
       else
         format.html { render :new }

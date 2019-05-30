@@ -22,7 +22,7 @@
     <tbody>
     <% @sites.each do |site| %>
       <tr>
-        <td><%= image_tag site.logo.variant(resize_to_fit: [100, 100]) if site.logo.attached? %></td>
+        <td><%= image_tag site.logo.variant(resize_to_fit: [50, 50]) if site.logo.attached? %></td>
         <td><%= site.name %></td>
         <td> <% if site.active? %><span class="icon-holder">
                                     <i class="mdi mdi-check"></i>

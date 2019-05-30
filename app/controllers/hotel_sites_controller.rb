@@ -8,6 +8,7 @@ class HotelSitesController < ApplicationController
   def index
     @q = HotelSite.ransack(params[:q])
     @hotel_sites = @q.result(distinct: true)
+    @hotel_site = HotelSite.new
   end
 
   # GET /hotel_sites/1
@@ -29,7 +30,7 @@ class HotelSitesController < ApplicationController
 
     respond_to do |format|
       if @hotel_site.save
-        format.html { redirect_to @hotel_site, notice: 'Hotel site was successfully created.' }
+        format.html { redirect_to hotel_sites_url, notice: 'Hotel site was successfully created.' }
         format.json { render :show, status: :created, location: @hotel_site }
       else
         format.html { render :new }
@@ -43,7 +44,7 @@ class HotelSitesController < ApplicationController
   def update
     respond_to do |format|
       if @hotel_site.update(hotel_site_params)
-        format.html { redirect_to @hotel_site, notice: 'Hotel site was successfully updated.' }
+        format.html { redirect_to hotel_sites_url, notice: 'Hotel site was successfully updated.' }
         format.json { render :show, status: :ok, location: @hotel_site }
       else
         format.html { render :edit }

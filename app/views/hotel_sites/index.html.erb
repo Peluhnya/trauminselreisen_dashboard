@@ -10,14 +10,20 @@
 <div class="card">
   <div class="card-body">
 <%= search_form_for @q do |f| %>
+      <%= f.label :site_cont %>
+      <div class="row" >
+<div class="col-7">
 
-  <%= f.label :site_cont %>
-  <%= f.select :site_id_eq, Site.all.map{|e| [e.name, e.id]}, class: 'form-control' %>
-
-
+  <%= f.select :site_id_eq, Site.all.map{|e| [e.name, e.id]}, {}, class: 'form-control' %>
+</div>
+      <div class="col-4">
   <%= f.submit 'Search', class: "btn btn-gradient-success" %>
+      </div>
+      </div>
 <% end %>
-    <%= link_to 'New Hotel Site', new_hotel_site_path, class: "btn btn-gradient-success" %>
+    <br>
+
+    <button data-toggle="modal" data-target="#side-modal-r" class="btn btn-gradient-success">New Hotel Site</button>
 
 
 <table class="table table-bordered table-striped table-hover">
@@ -34,11 +40,82 @@
     <tr>
       <td><%= hotel_site.hotel.name %></td>
       <td><%= hotel_site.site.name %></td>
-      <td><%= link_to 'Edit', edit_hotel_site_path(hotel_site) %></td>
-      <td><%= link_to 'Destroy', hotel_site, method: :delete, data: {confirm: 'Are you sure?'} %></td>
+      <td>
+        <button data-toggle="modal" data-target="#side-modal-r<%= hotel_site.id %>" class="btn btn-gradient-success">
+          Edit
+        </button>
+      </td>
     </tr>
+    <div class="modal modal-right fade " id="side-modal-r<%= hotel_site.id %>">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="side-modal-wrapper">
+            <div class="vertical-align">
+              <div class="table-cell">
+                <div class="modal-body">
+                  <div class="p-h-15">
+                    <h4>New</h4>
+                    <p class="m-b-15 font-size-13">Please new hotel site</p>
+                    <%= form_with(model: hotel_site, local: true) do |f| %>
+                      <div class="form-group">
+                        <%= f.select :site_id_eq, Site.all.map{|e| [e.name, e.id]}, {},  class: 'form-control' %>
+                      </div>
+                      <div class="form-group">
+                        <%= f.select :hotel_id_eq, Hotel.all.map{|e| [e.name, e.id]}, {}, class: 'form-control' %>
+                      </div>
+                      <div class="form-group">
+                        <%= f.text_field :link, class: "form-control" %>
+                      </div>
+
+                      <br>
+                      <%= f.submit 'Save', class: "btn btn-success" %>
+
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
   <% end %>
   </tbody>
 </table>
+  </div>
+</div>
+<div class="modal modal-right fade " id="side-modal-r">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="side-modal-wrapper">
+        <div class="vertical-align">
+          <div class="table-cell">
+            <div class="modal-body">
+              <div class="p-h-15">
+                <h4>New</h4>
+                <p class="m-b-15 font-size-13">Please new hotel site</p>
+                <%= form_with(model: @hotel_site, local: true) do |f| %>
+                  <div class="form-group">
+                    <%= f.select :site_id_eq, Site.all.map{|e| [e.name, e.id]}, {},  class: 'form-control' %>
+                  </div>
+                  <div class="form-group">
+                    <%= f.select :hotel_id_eq, Hotel.all.map{|e| [e.name, e.id]}, {}, class: 'form-control' %>
+                  </div>
+                  <div class="form-group">
+                    <%= f.text_field :link, class: "form-control" %>
+                  </div>
+
+                  <br>
+                  <%= f.submit 'Save', class: "btn btn-success" %>
+
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
 </div>
