@@ -1,29 +1,77 @@
-<p id="notice"><%= notice %></p>
-
-<h1>Sites</h1>
-
-<table>
-  <thead>
+<div class="page-header">
+  <h2 class="header-title">Sites</h2>
+  <div class="header-sub-title">
+    <nav class="breadcrumb breadcrumb-dash">
+      <a href="/" class="breadcrumb-item"><i class="ti-home p-r-5"></i>Home</a>
+      <span class="breadcrumb-item active">Sites</span>
+    </nav>
+  </div>
+</div>
+<div class="card">
+  <div class="card-body">
+  <table class="table table-bordered table-striped table-hover">
+    <thead>
     <tr>
+      <th>Photo</th>
       <th>Name</th>
-      <th>Active</th>
-      <th colspan="3"></th>
+      <th>Active?</th>
+      <th >Action</th>
     </tr>
-  </thead>
+    </thead>
 
-  <tbody>
+    <tbody>
     <% @sites.each do |site| %>
       <tr>
+        <td><%= image_tag site.logo.variant(resize_to_fit: [100, 100]) if site.logo.attached? %></td>
         <td><%= site.name %></td>
-        <td><%= site.active %></td>
-        <td><%= link_to 'Show', site %></td>
-        <td><%= link_to 'Edit', edit_site_path(site) %></td>
-        <td><%= link_to 'Destroy', site, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td> <% if site.active? %><span class="icon-holder">
+                                    <i class="mdi mdi-check"></i>
+                                </span><% else %><span class="icon-holder">
+                                    <i class="mdi mdi-window-close"></i>
+                                </span><% end %></td>
+        <td>
+          <button data-toggle="modal" data-target="#side-modal-r<%= site.id %>" class="btn btn-gradient-success">Edit</button>
+        </td>
       </tr>
+      <div class="modal modal-right fade " id="side-modal-r<%= site.id %>">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="side-modal-wrapper">
+              <div class="vertical-align">
+                <div class="table-cell">
+                  <div class="modal-body">
+                    <div class="p-h-15">
+                      <h4>Edit <%= site.name %></h4>
+                      <p class="m-b-15 font-size-13">Please edit site</p>
+                      <%= form_with(model: site, local: true) do |form| %>
+                        <div class="form-group">
+                          <%= form.text_field :name, class: "form-control" %>
+                        </div>
+                        <div class="form-group">
+                          <%= form.file_field :logo, class: "form-control" %>
+                        </div>
+                        <div >
+                          <%= form.check_box :active %>
+                          <label for="agreement">Active?</label>
+                        </div>
+                        <br>
+
+                        <%= form.submit 'Save', class: "btn btn-success" %>
+
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
     <% end %>
-  </tbody>
-</table>
+    </tbody>
+  </table>
 
-<br>
-
-<%= link_to 'New Site', new_site_path %>
+</div>
+</div>

@@ -1,31 +1,44 @@
-<p id="notice"><%= notice %></p>
+<div class="page-header">
+  <h2 class="header-title">Hotel & Site relation</h2>
+  <div class="header-sub-title">
+    <nav class="breadcrumb breadcrumb-dash">
+      <a href="/" class="breadcrumb-item"><i class="ti-home p-r-5"></i>Home</a>
+      <span class="breadcrumb-item active">relations</span>
+    </nav>
+  </div>
+</div>
+<div class="card">
+  <div class="card-body">
+<%= search_form_for @q do |f| %>
 
-<h1>Hotel Sites</h1>
+  <%= f.label :site_cont %>
+  <%= f.select :site_id_eq, Site.all.map{|e| [e.name, e.id]}, class: 'form-control' %>
 
-<table>
+
+  <%= f.submit 'Search', class: "btn btn-gradient-success" %>
+<% end %>
+    <%= link_to 'New Hotel Site', new_hotel_site_path, class: "btn btn-gradient-success" %>
+
+
+<table class="table table-bordered table-striped table-hover">
   <thead>
-    <tr>
-      <th>Hotel</th>
-      <th>Site</th>
-      <th>Link</th>
-      <th colspan="3"></th>
-    </tr>
+  <tr>
+    <th>Hotel</th>
+    <th>Site</th>
+    <th colspan="2"></th>
+  </tr>
   </thead>
 
   <tbody>
-    <% @hotel_sites.each do |hotel_site| %>
-      <tr>
-        <td><%= hotel_site.hotel_id %></td>
-        <td><%= hotel_site.site_id %></td>
-        <td><%= hotel_site.link %></td>
-        <td><%= link_to 'Show', hotel_site %></td>
-        <td><%= link_to 'Edit', edit_hotel_site_path(hotel_site) %></td>
-        <td><%= link_to 'Destroy', hotel_site, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
+  <% @hotel_sites.each do |hotel_site| %>
+    <tr>
+      <td><%= hotel_site.hotel.name %></td>
+      <td><%= hotel_site.site.name %></td>
+      <td><%= link_to 'Edit', edit_hotel_site_path(hotel_site) %></td>
+      <td><%= link_to 'Destroy', hotel_site, method: :delete, data: {confirm: 'Are you sure?'} %></td>
+    </tr>
+  <% end %>
   </tbody>
 </table>
-
-<br>
-
-<%= link_to 'New Hotel Site', new_hotel_site_path %>
+  </div>
+</div>

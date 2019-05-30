@@ -1,35 +1,38 @@
-<p id="notice"><%= notice %></p>
-
-<h1>Hotel Types</h1>
-
-<table>
+<div class="page-header">
+  <h2 class="header-title">Hotels</h2>
+  <div class="header-sub-title">
+    <nav class="breadcrumb breadcrumb-dash">
+      <a href="/" class="breadcrumb-item"><i class="ti-home p-r-5"></i>Home</a>
+      <span class="breadcrumb-item active">Types</span>
+    </nav>
+  </div>
+</div>
+<div class="card">
+  <div class="card-body">
+    <%= link_to 'New Hotel Type', new_hotel_type_path, class: "btn btn-gradient-success"%>
+    <table class="table table-bordered table-striped table-hover">
   <thead>
-    <tr>
-      <th>Name</th>
-      <th>Hotel site</th>
-      <th>Year</th>
-
-      <th>Link</th>
-      <th colspan="3"></th>
-    </tr>
+  <tr>
+    <th>Name</th>
+    <th>Hotel</th>
+    <th>Site</th>
+    <th>Action</th>
+  </tr>
   </thead>
 
   <tbody>
-    <% @hotel_types.each do |hotel_type| %>
-      <tr>
-        <td><%= hotel_type.name %></td>
-        <td><%= hotel_type.hotel_site_id %></td>
-        <td><%= hotel_type.year %></td>
+  <% @hotel_types.each do |hotel_type| %>
+    <tr>
+      <td><%= hotel_type.origin.name %></td>
+      <td><%= hotel_type.hotel.name %></td>
 
-        <td><%= hotel_type.link %></td>
-        <td><%= link_to 'Show', hotel_type %></td>
-        <td><%= link_to 'Edit', edit_hotel_type_path(hotel_type) %></td>
-        <td><%= link_to 'Destroy', hotel_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
+      <td><%= hotel_type.site.name %></td>
+      <td><%= link_to 'Show', hotel_type %></td>
+    </tr>
+  <% end %>
   </tbody>
 </table>
 
-<br>
+  </div>
+</div>
 
-<%= link_to 'New Hotel Type', new_hotel_type_path %>

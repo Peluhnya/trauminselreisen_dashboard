@@ -1,91 +1,17 @@
 
-@font-face {
-	font-family: 'Gotham Pro';
-	src: url('font/GothamPro-Medium.eot');
-	src: local('Gotham Pro Medium'), local('GothamPro-Medium'),
-		url('font/GothamPro-Medium.eot?#iefix') format('embedded-opentype'),
-		url('font/GothamPro-Medium.woff') format('woff'),
-		url('font/GothamPro-Medium.ttf') format('truetype');
-	font-weight: 500;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Gotham Pro';
-	src: url('font/GothamPro-Bold.eot');
-	src: local('Gotham Pro Bold'), local('GothamPro-Bold'),
-		url('font/GothamPro-Bold.eot?#iefix') format('embedded-opentype'),
-		url('font/GothamPro-Bold.woff') format('woff'),
-		url('font/GothamPro-Bold.ttf') format('truetype');
-	font-weight: bold;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Gotham Pro Narrow';
-	src: url('font/GothamProNarrow-Bold.eot');
-	src: local('Gotham Pro Narrow Bold'), local('GothamProNarrow-Bold'),
-		url('font/GothamProNarrow-Bold.eot?#iefix') format('embedded-opentype'),
-		url('font/GothamProNarrow-Bold.woff') format('woff'),
-		url('font/GothamProNarrow-Bold.ttf') format('truetype');
-	font-weight: bold;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Gotham Pro Narrow';
-	src: url('font/GothamProNarrow-Medium.eot');
-	src: local('Gotham Pro Narrow Medium'), local('GothamProNarrow-Medium'),
-		url('font/GothamProNarrow-Medium.eot?#iefix') format('embedded-opentype'),
-		url('font/GothamProNarrow-Medium.woff') format('woff'),
-		url('font/GothamProNarrow-Medium.ttf') format('truetype');
-	font-weight: 500;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Gotham Pro';
-	src: url('font/GothamPro-Light.eot');
-	src: local('Gotham Pro Light'), local('GothamPro-Light'),
-		url('font/GothamPro-Light.eot?#iefix') format('embedded-opentype'),
-		url('font/GothamPro-Light.woff') format('woff'),
-		url('font/GothamPro-Light.ttf') format('truetype');
-	font-weight: 300;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Gotham Pro';
-	src: url('font/GothamPro-Black.eot');
-	src: local('Gotham Pro Black'), local('GothamPro-Black'),
-		url('font/GothamPro-Black.eot?#iefix') format('embedded-opentype'),
-		url('font/GothamPro-Black.woff') format('woff'),
-		url('font/GothamPro-Black.ttf') format('truetype');
-	font-weight: 900;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Gotham Pro';
-	src: url('font/GothamPro.eot');
-	src: local('Gotham Pro'), local('GothamPro'),
-		url('font/GothamPro.eot?#iefix') format('embedded-opentype'),
-		url('font/GothamPro.woff') format('woff'),
-		url('font/GothamPro.ttf') format('truetype');
-	font-weight: normal;
-	font-style: normal;
-}
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700');
 
 
 body{
-	font-family: 'Gotham Pro';
-	font-size: 12px;
-	font-weight: 500;
+	font-family: 'Roboto', sans-serif;
+	font-size: 14px;
+	line-height: 16px;
+	font-weight: 700;
 	line-height: auto;
+	background: #E5E5E5;
 }
 main{
-	background: #fafafa;
-	padding: 50px 0;
+	padding: 56px 0;
 }
 .container {
     max-width: 1500px;
@@ -122,15 +48,18 @@ main{
 	overflow: hidden;
 }
 .first-level{
-	background: #3a80ff;
+	background: #5385DF;
 	color: #fff;
+}
+.first-level tr{
+	height: 64px;
 }
 .table .row-head{
 	width: 25.6%;
 	text-align: left;
 }
 .cel-inner{
-	padding: 12px;
+	padding: 13px 12px;
 }
 .top-title{
 	position: relative;
@@ -172,40 +101,9 @@ main{
 .top-title-col{
 	display: inline-block;
 	position: relative;
-	padding-right: 16px;
-}
-.top-title-col:after{
-	content: '';
-	width: 11px;
-	height: 11px;
-	background-image: url(img/icon-link-out-white.svg);
-	background-repeat: no-repeat;
-	background-size: cover;
-    position: absolute;
-    top: 2px;
-    right: 0;
-}
-.sort-down{
-	width: 9px;
-	height: 9px;
-	background-image: url(img/down-chevron.svg);
-	background-repeat: no-repeat;
-	background-size: cover;
-	display: inline-block;
-	box-shadow: 4px 2px 3px 0px rgba(58, 128, 255, 0.4);
-}
-.sort-up{
-	width: 9px;
-	height: 9px;
-	background-image: url(img/up-chevron.svg);
-	background-repeat: no-repeat;
-	background-size: cover;
-	display: inline-block;
-	box-shadow: 4px 2px 3px 0px rgba(58, 128, 255, 0.4);
-}
-.sort-down.inactive,
-.sort-up.inactive{
-	opacity: 0.6;
+	font-weight: bold;
+	font-size: 16px;
+	line-height: 19px;
 }
 .second-level{
 	display: none;
@@ -214,10 +112,18 @@ main{
 	display: none;
 }
 .second-level-head{
-	background: #efefef;
+	background: #F3F6FB;
 	border-left: 1px solid #ebebeb;
 	border-right: 1px solid #ebebeb;
 	border-bottom: 1px solid #ebebeb;
+	height: 56px;
+}
+.second-level-title{
+	padding-left: 12px;
+}
+.second-level-title a{
+	display: inline-block;
+	vertical-align: middle;
 }
 .second-level-head td{
 	border: none;
@@ -228,23 +134,24 @@ main{
 .second-level-title__inner{
 	display: inline-block;
 	position: relative;
-	line-height: 23px;
-	padding-left: 54px;
-	color: #000;
-	font-size: 12px;
+	font-weight: bold;
+	font-size: 14px;
+	line-height: 24px;
+	text-transform: uppercase;
+	color: #3F3F3F;
 }
-.second-level-title__inner:before{
-	content: '';
-	width: 16px;
-	height: 16px;
-	background-image: url(img/icon-globe.svg);
-	background-repeat: no-repeat;
-	background-size: cover;
-    position: absolute;
-    left: 14px;
+.second-level-title__img{
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	margin-right: 22px;
+}
+.second-level-title__img img{
+	width: 100%;
+	height: auto;
 }
 .collapse-arrow{
-	margin-right: 10px;
+	margin-right: 14px;
 }
 .collapse-arrow-down-black{
 	width: 9px;
@@ -263,19 +170,19 @@ main{
 	display: inline-block;
 }
 .second-link-out{
-	display: inline-block;
-	width: 11px;
-	height: 11px;
+	display: block;
+	width: 24px;
+	height: 24px;
 	background-image: url(img/icon-link-out-grey.svg);
 	background-repeat: no-repeat;
 	background-size: cover;
-	margin-left: 10px;
+	margin-left: 14px;
 }
 .second-link-out:hover{
 	background-image: url(img/icon-link-blue.svg);
 }
 /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-.inner-table tr:hover{
+/*.inner-table tr:hover{
 	background: rgba(214,214,214,0.45);
 	background: -moz-linear-gradient(top, rgba(214,214,214,0.45) 0%, rgba(253,253,253,0) 50%, rgba(255,255,255,0) 53%, rgba(255,255,255,0) 100%);
 	background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(214,214,214,0.45)), color-stop(50%, rgba(253,253,253,0)), color-stop(53%, rgba(255,255,255,0)), color-stop(100%, rgba(255,255,255,0)));
@@ -283,8 +190,12 @@ main{
 	background: -o-linear-gradient(top, rgba(214,214,214,0.45) 0%, rgba(253,253,253,0) 50%, rgba(255,255,255,0) 53%, rgba(255,255,255,0) 100%);
 	background: -ms-linear-gradient(top, rgba(214,214,214,0.45) 0%, rgba(253,253,253,0) 50%, rgba(255,255,255,0) 53%, rgba(255,255,255,0) 100%);
 	background: linear-gradient(to bottom, rgba(214,214,214,0.45) 0%, rgba(253,253,253,0) 50%, rgba(255,255,255,0) 53%, rgba(255,255,255,0) 100%);
-}
+}*/
 /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+.inner-table tr{
+	height: 64px;
+	background: #fff;
+}
 .inner-table td {
     border-top: 1px solid #ebebeb;
     border-left: 1px solid #ebebeb;
@@ -297,49 +208,59 @@ main{
 }
 .inner-title{
 	position: relative;
-	padding-left: 76px;
-	color: #676e83;
-	font-size: 12px;
+	padding-left: 80px;
+	padding-right: 48px;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 16px;
+	text-transform: uppercase;
+	color: #646E89;
 }
 .second-link-in{
-	display: inline-block;
+	display: block;
 	width: 11px;
-	height: 11px;
+    height: 11px;
 	background-image: url(img/icon-link-in.svg);
 	background-repeat: no-repeat;
 	background-size: cover;
 	margin-left: 30px;
+	position: absolute;
+	top: 50%;
+	transform: translate(0, -50%);
+	right: 16px;
 }
 .second-link-in:hover{
-	background-image: url(img/icon-link-in-blue.svg);
+	background-image: url(img/icon-link-blue.svg);
+}
+.inner-table .cel-inner{
+	padding-right: 24px;
 }
 .top-price{
 	display: block;
+	font-weight: bold;
 	font-size: 14px;
+	line-height: 16px;
+	text-align: right;
+	padding-bottom: 8px;
 }
 .price-unchanged{
-	color: #000;
+	color: #000000;
 }
 .price-up{
 	position: relative;
-	color: #fc0000;
-	padding-right: 14px;
-	background-image: url(img/icon-price-up.svg);
-	background-repeat: no-repeat;
-	background-position: center right;
+	color: #DB3E3E;
 }
 .price-down{
 	position: relative;
-	color: #008101;
-	padding-right: 14px;
-	background-image: url(img/icon-price-down.svg);
-	background-repeat: no-repeat;
-	background-position: center right;
+	color: #119911;
 }
 .bottom-price{
 	display: block;
+	font-weight: bold;
 	font-size: 14px;
-	color: #3a80ff;
+	line-height: 16px;
+	text-align: right;
+	color: #646E89;
 }
 
 /**********Header***********/
@@ -353,11 +274,12 @@ html, body {
 }
 nav{
 	background: #1f2736;
-	padding: 18px 0 15px 0;
+	padding: 12px 0;
 }
 /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 .brand-logo img{
-	width: 50%;
+	width: 69px;
+	height: auto;
 }
 /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 .nav-list{
@@ -371,39 +293,15 @@ nav{
 	text-transform: uppercase;
 	font-size: 12px;
 	font-weight: 500;
-	margin-left: 40px;
-	margin-top: 5px;
-    margin-bottom: 5px;
+	margin-left: 32px;
 }
 .nav-help{
 	cursor: pointer;
-	padding-left: 23px;
 	position: relative;
-}
-.nav-help:before{
-	content: '';
-	width: 14px;
-	height: 14px;
-	background-image: url(img/icon-help.svg);
-	background-repeat: no-repeat;
-	background-size: cover;
-    position: absolute;
-    left: 0;
 }
 .nav-sort{
 	cursor: pointer;
-	padding-left: 18px;
 	position: relative;
-}
-.nav-sort:before{
-	content: '';
-	width: 14px;
-	height: 14px;
-	background-image: url(img/icon-filter.svg);
-	background-repeat: no-repeat;
-	background-size: cover;
-    position: absolute;
-    left: 0;
 }
 .nav-sort-select{
 	display: block;
@@ -441,8 +339,11 @@ nav{
 	line-height: 1;
 	font-weight: 600;
 }
+.modal-content{
+	border: unset;
+}
 .modal-header .close {
-    padding: 5px 10px;
+    padding: 8px 16px;
     opacity: 1;
 }
 .modal-header .close span{
@@ -457,10 +358,13 @@ nav{
 	border: none;
 }
 .modal-body{
-	padding: 12px 40px 40px 40px;
+	padding: 0 40px 40px 40px;
 }
 .modal-title{
+	font-weight: bold;
 	font-size: 24px;
+	line-height: 28px;
+	color: #444444;
 	padding-bottom: 40px;
 }
 .help-box{
@@ -481,7 +385,7 @@ footer{
     bottom: 0;
     left: 0;
     width: 100%;
-    background: #fff;
+   /* background: #fff;*/
 }
 .footer-info{
 	padding: 33px 0;
@@ -491,7 +395,7 @@ footer{
     color: #777c85;
 }
 .footer-info span{
-	color: #3a80ff;
+	color: #5385DF;
 }
 .contact-icon{
 	width: 60px;

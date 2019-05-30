@@ -1,25 +1,75 @@
-<p id="notice"><%= notice %></p>
+<div class="table-responsive">
+  <table class="table top-table">
+    <thead class="first-level">
+    <tr>
+      <th class="row-head">
+        <div class="cel-inner">
+          <div class="top-title"><span class="collapse-arrow collapse-arrow-down"></span><%= @hotel_type.origin.name %>
+          </div>
+        </div>
+      </th>
+      <% months_after_current.each do |month| %>
+        <th>
+          <div class="cel-inner">
+            <div class="top-title-col"><%= month.upcase %></div>
+            <div class="sort-wrap">
+              <span class="sort-down inactive"></span>
+              <span class="sort-up"></span>
+            </div>
+          </div>
+        </th>
+      <% end %>
+      <% months_before_current.each do |month| %>
+        <th>
+          <div class="cel-inner">
+            <div class="top-title-col"><%= month.upcase %></div>
+            <div class="sort-wrap">
+              <span class="sort-down inactive"></span>
+              <span class="sort-up"></span>
+            </div>
+          </div>
+        </th>
+      <% end %>
+    </tr>
+    </thead>
 
-<p>
-  <strong>Name:</strong>
-  <%= @hotel_type.name %>
-</p>
+    <tbody class="second-level" style="display: table-row-group;">
+    <% @hotel_type.origin.hotel_types.each do |ht| %>
+      <tr>
+        <% hs = ht.hotel_site %>
+        <td class="row-head">
+          <div class="cel-inner">
+            <div class="inner-title">
+              <span class="second-level-title__img"><%= image_tag url_for(hs.site.logo) if hs.site.logo.attached? %></span>
+              <%= hs.site.name %>
+            </div>
+          </div>
+        </td>
 
-<p>
-  <strong>Hotel site:</strong>
-  <%= @hotel_type.hotel_site_id %>
-</p>
-
-<p>
-  <strong>Year:</strong>
-  <%= @hotel_type.year %>
-</p>
-
-
-<p>
-  <strong>Link number:</strong>
-  <%= @hotel_type.link %>
-</p>
-
-<%= link_to 'Edit', edit_hotel_type_path(@hotel_type) %> |
-<%= link_to 'Back', hotel_types_path %>
+        <% months_after_current.each do |month| %>
+          <% origin = ht.origin.month_prices.where(month: month, year: Date.current.year).take %>
+          <% mpss = ht.month_prices.where(month: month, year: Date.current.year) %>
+          <td>
+            <div class="cel-inner">
+              <span class="top-price price-<%= mpss.take.price_option if mpss.take %>"><%= price_form(mpss.sum(:price)) %></span>
+              <span class="bottom-price"><%= price_form(((origin.price * 2 * 7) if origin) || 0) %></span>
+            </div>
+          </td>
+        <% end %>
+        <% months_before_current.each do |month| %>
+          <% origin = ht.origin.month_prices.where(month: month, year: Date.current.year).take %>
+          <% mpss = ht.month_prices.where(month: month, year: Date.current.year) %>
+          <td>
+            <div class="cel-inner">
+              <span class="top-price price-<%= mpss.take.price_option if mpss.take %>">
+                <%= price_form(mpss.sum(:price)) %>
+              </span>
+              <span class="bottom-price"><%= price_form(((origin.price * 2 * 7) if origin) || 0) %></span>
+            </div>
+          </td>
+        <% end %>
+      </tr>
+      </tbody>
+    <% end %>
+    </table>
+</div>

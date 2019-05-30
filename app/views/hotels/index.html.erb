@@ -1,99 +1,88 @@
-<% @hotels.each do |hotel| %>
-<div class="table-responsive">
-  <table class="table top-table">
-    <thead class="first-level">
-      <tr>
-        <th class="row-head">
-          <div class="cel-inner">
-            <div class="top-title"><span class="collapse-arrow collapse-arrow-down"></span><%= hotel.name %></div>
-          </div>
-        </th>
-        <% months_after_current.each do |month| %>
-        <th>
-          <div class="cel-inner">
-            <div class="top-title-col"><%= month.upcase %></div>
-            <div class="sort-wrap">
-              <span class="sort-down inactive"></span>
-              <span class="sort-up"></span>
-            </div>
-          </div>
-        </th>
-        <% end %>
-        <% months_before_current.each do |month| %>
-        <th>
-          <div class="cel-inner">
-            <div class="top-title-col"><%= month.upcase %></div>
-            <div class="sort-wrap">
-              <span class="sort-down inactive"></span>
-              <span class="sort-up"></span>
-            </div>
-          </div>
-        </th>
-        <% end %>
-      </tr>
-    </thead>
-
-    <tbody class="second-level">
-      <% hotel.hotel_sites.each do |hs| %>
-      <% mps = hs.month_prices %>
-      <tr class="second-level-head">
-        <td class="row-head">
-          <div class="cel-inner">
-            <div class="second-level-title">
-              <div class="second-level-title__inner"><span
-                  class="collapse-arrow collapse-arrow-down-black"></span><%= hs.site.name %></div><a href="#"
-                target="_blank"><span class="second-link-out"></span></a>
-            </div>
-          </div>
-        </td>
-        <% months_after_current.each do |month| %>
-        <td>
-          <div class="cel-inner">€<%= mps.where(month: month).pluck(:price_concurrent).min %></div>
-        </td>
-        <% end %>
-        <% months_before_current.each do |month| %>
-        <td>
-          <div class="cel-inner">€<%= mps.where(month: month).pluck(:price_concurrent).min %></div>
-        </td>
-        <% end %>
-      </tr>
-      <tr class="second-level-content">
-        <td colspan="13">
-          <table class="table inner-table">
-            <tbody>
-              <% hs.hotel_types.each do |ht| %>
-              <% mps = ht.month_prices %>
-              <tr>
-                  <td class="row-head">
-                      <div class="cel-inner">
-                        <div class="inner-title"><%= ht.name %> <a href="#" target="_blank"><span class="second-link-in"></span></a></div>
-                      </div>
-                    </td>
-                <% months_after_current.each do |month| %>
-                <td>
-                    <div class="cel-inner">
-                      <span class="top-price price-unchanged">€<%= mps.where(month: month).sum(:price_concurrent) %></span>
-                      <span class="bottom-price"></span>
-                    </div>
-                  </td>
-                <% end %>
-                <% months_before_current.each do |month| %>
-                <td>
-                    <div class="cel-inner">
-                      <span class="top-price price-unchanged">€<%= mps.where(month: month).sum(:price_concurrent) %></span>
-                      <span class="bottom-price"></span>
-                    </div>
-                  </td>
-                  <% end %>
-              </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </td>
-      </tr>
-      <% end %>
-    </tbody>
-    
-  </table>
+<div class="page-header">
+  <h2 class="header-title">Hotels</h2>
+  <div class="header-sub-title">
+    <nav class="breadcrumb breadcrumb-dash">
+      <a href="/" class="breadcrumb-item"><i class="ti-home p-r-5"></i>Home</a>
+      <span class="breadcrumb-item active">Hotels</span>
+    </nav>
+  </div>
 </div>
-<% end %>
+<div class="card">
+  <div class="card-body">
+    <table class="table table-bordered table-striped table-hover">
+      <thead>
+      <tr>
+        <th>Hotel</th>
+        <th>City</th>
+        <th>Count type</th>
+        <th>Active?</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+
+      <tbody>
+
+      <% @hotels.each do |hotel| %>
+        <tr>
+          <td>
+            <%= hotel.name %>
+          </td>
+          <td>
+            <%= hotel.city %>
+          </td>
+          <td>
+            <%= hotel.origins.count %>
+          </td>
+          <td>
+            <% if hotel.active? %><span class="icon-holder">
+                                    <i class="mdi mdi-check"></i>
+                                </span><% else %><span class="icon-holder">
+                                    <i class="mdi mdi-window-close"></i>
+                                </span><% end %>
+          </td>
+          <td>
+            <button data-toggle="modal" data-target="#side-modal-r<%= hotel.id %>" class="btn btn-gradient-success">Edit</button>
+          </td>
+        </tr>
+        <div class="modal modal-right fade " id="side-modal-r<%= hotel.id %>">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="side-modal-wrapper">
+                <div class="vertical-align">
+                  <div class="table-cell">
+                    <div class="modal-body">
+                      <div class="p-h-15">
+                        <h4>Edit <%= hotel.name %></h4>
+                        <p class="m-b-15 font-size-13">Please edit hotel</p>
+                        <%= form_with(model: hotel, local: true) do |form| %>
+                          <div class="form-group">
+                            <%= form.text_field :name, class: "form-control" %>
+                          </div>
+                          <div class="form-group">
+                            <%= form.text_field :city, class: "form-control" %>
+                          </div>
+                          <div class="form-group">
+                            <%= form.text_field :origin_url, class: "form-control" %>
+                          </div>
+                          <div >
+                            <%= form.check_box :active %>
+                            <label for="agreement">Active?</label>
+                          </div>
+                          <br>
+                          <%= form.submit 'Save', class: "btn btn-success" %>
+
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
