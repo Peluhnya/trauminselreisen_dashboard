@@ -71,6 +71,7 @@
                         </td>
 
                         <% months_after_current.each do |month| %>
+                          <% cache month do %>
                           <% origin = ht.origin.month_prices.where(month: month, year: Date.current.year).take %>
                           <% mpss = mps.where(month: month, year: Date.current.year) %>
                           <td>
@@ -81,8 +82,10 @@
                             </div>
                           </td>
                         <% end %>
+                        <% end %>
                         <% months_before_current.each do |month| %>
-                          <% mpss = mps.where(month: month, year: Date.current.year) %>
+                          <% cache month do %>
+                      <% mpss = mps.where(month: month, year: Date.current.year) %>
                           <% origin = ht.origin.month_prices.where(month: month, year: Date.current.year).take %>
                           <td>
                             <div class="cel-inner">
@@ -92,6 +95,7 @@
                               <span class="bottom-price"><%= price_form(((origin.price * 2 * 7) if origin) || 0) %></span>
                             </div>
                           </td>
+                        <% end %>
                         <% end %>
                       </tr>
                     <% end %>
