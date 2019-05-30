@@ -87,14 +87,6 @@ ActiveRecord::Schema.define(version: 2019_05_29_110950) do
     t.index ["hotel_id"], name: "index_origins_on_hotel_id"
   end
 
-  create_table "permissions", force: :cascade do |t|
-    t.string "action"
-    t.string "subject_class"
-    t.integer "subject_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
   create_table "sites", force: :cascade do |t|
     t.string "name"
     t.boolean "active"
