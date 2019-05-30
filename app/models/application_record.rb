@@ -157,7 +157,7 @@ class ApplicationRecord < ActiveRecord::Base
           origin = Origin.create(name: name, hotel_id: hot.id)
         end
         price = line.css('td')[3].text.strip.gsub(" €",'').gsub(".",'')
-        price+=price
+        price = price.to_i * 2
         ms.each do |month|
 
           i = I18n.t("date.abbr_month_names").compact.index month
