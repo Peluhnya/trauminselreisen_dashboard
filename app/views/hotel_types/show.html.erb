@@ -52,7 +52,7 @@
           <td>
             <div class="cel-inner">
               <span class="top-price price-<%= mpss.take.price_option if mpss.take %>"><%= price_form(mpss.sum(:price)) %></span>
-              <span class="bottom-price"><%= price_form(((origin.price * 2 * 7) if origin) || 0) %></span>
+              <span class="bottom-price"><%= price_form((origin.price if origin) || 0) %></span>
             </div>
           </td>
         <% end %>
@@ -64,7 +64,7 @@
               <span class="top-price price-<%= mpss.take.price_option if mpss.take %>">
                 <%= price_form(mpss.sum(:price)) %>
               </span>
-              <span class="bottom-price"><%= price_form(((origin.price * 2 * 7) if origin) || 0) %></span>
+              <span class="bottom-price"><%= price_form((origin.price if origin) || 0) %></span>
             </div>
           </td>
         <% end %>

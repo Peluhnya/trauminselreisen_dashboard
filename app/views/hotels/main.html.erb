@@ -73,26 +73,26 @@
                         <% months_after_current.each do |month| %>
                           <% cache month do %>
                           <% origin = ht.origin.month_prices.where(month: month, year: Date.current.year).take %>
-                          <% mpss = mps.where(month: month, year: Date.current.year) %>
+                          <% mpss = mps.where(month: month, year: Date.current.year).take %>
                           <td>
                             <div class="cel-inner">
-                      <span class="top-price price-<%= mpss.take.price_option if mpss.take %>"> <%= price_form(mpss.sum(:price)) %>
+                      <span class="top-price price-<%= mpss.price_option if mpss %>"> <%= price_form(mpss.price) %>
               </span>
-                              <span class="bottom-price"><%= price_form(((origin.price * 2 * 7) if origin) || 0) %></span>
+                              <span class="bottom-price"><%= price_form((origin.price if origin) || 0) %></span>
                             </div>
                           </td>
                         <% end %>
                         <% end %>
                         <% months_before_current.each do |month| %>
                           <% cache month do %>
-                      <% mpss = mps.where(month: month, year: Date.current.year) %>
+                      <% mpss = mps.where(month: month, year: Date.current.year).take %>
                           <% origin = ht.origin.month_prices.where(month: month, year: Date.current.year).take %>
                           <td>
                             <div class="cel-inner">
-                      <span class="top-price price-<%= mpss.take.price_option if mpss.take %>">
-                 <%= price_form(mpss.sum(:price)) %>
+                      <span class="top-price price-<%= mpss.price_option if mpss %>">
+                 <%= price_form(mpss.price) %>
               </span>
-                              <span class="bottom-price"><%= price_form(((origin.price * 2 * 7) if origin) || 0) %></span>
+                              <span class="bottom-price"><%= price_form((origin.price if origin) || 0) %></span>
                             </div>
                           </td>
                         <% end %>
