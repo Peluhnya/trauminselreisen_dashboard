@@ -35,6 +35,7 @@ class ApplicationRecord < ActiveRecord::Base
         end
         price_line = hotel.css(".price-row").first
         price = price_line.css(".price").text.gsub(" €",'').gsub(".", "").strip
+        price =  price.to_i * 2 * 7
           ms.each do |month|
             mp = MonthPrice.find_by(origin_id: origin.id, month: month, year: 2019)
             if mp.present?
