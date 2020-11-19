@@ -1,5 +1,5 @@
-<% @hotels.each do |hotel| %>
-  <% if hotel.hotel_types.present? %>
+  <% @hotels.each do |hotel| %>
+    <% if hotel.hotel_types.present? %>
     <div class="table-responsive">
       <table class="table top-table">
         <thead class="first-level">
@@ -37,6 +37,7 @@
         </thead>
 
         <tbody class="second-level">
+
         <% hotel.hotel_sites.each do |hs| %>
           <% mps = hs.month_prices %>
           <% if mps.present? %>
@@ -57,6 +58,7 @@
               <td colspan="13">
                 <table class="table inner-table">
                   <tbody>
+
                   <% hs.hotel_types.each do |ht| %>
                     <% cache ht do %>
                       <% mps = ht.month_prices %>
@@ -100,6 +102,7 @@
                       </tr>
                     <% end %>
                   <% end %>
+
                   </tbody>
                 </table>
           <% end %>
@@ -107,9 +110,10 @@
           </tr>
 
         <% end %>
+
         </tbody>
 
       </table>
     </div>
   <% end %>
-<% end %>
+  <% end %>
