@@ -60,6 +60,10 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+<<<<<<< HEAD
   config.hosts = "localhost"
+=======
+  config.hosts = "preis.trauminselreisen.de"
+>>>>>>> dd6ec0beb3b09e42a0c5587ba9a376cc18656ece
 
 end

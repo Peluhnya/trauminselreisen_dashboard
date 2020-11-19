@@ -37,3 +37,5 @@ yarn-debug.log*
 .vscode/
 
 
+
+/config/credentials/development.key
